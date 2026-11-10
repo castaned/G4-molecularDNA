@@ -1,0 +1,8 @@
+/config/yuca.local.sh
+/vendor/
+/build/
+/runs/
+/logs/
+__pycache__/
+*.pyc
+*.root

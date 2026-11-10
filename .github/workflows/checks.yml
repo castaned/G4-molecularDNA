@@ -1,0 +1,16 @@
+name: Check scripts
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Bash syntax
+        run: find env scripts slurm -type f \( -name '*.sh' -o -name '*.slurm' \) -print0 | xargs -0 -n1 bash -n
+      - name: Campaign tests (without Geant4)
+        run: python -m unittest discover -s tests -v
