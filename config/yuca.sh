@@ -1,4 +1,4 @@
-# Configuración de referencia proporcionada por Alfredo para YUCA.
+# Configuración de referencia para YUCA.
 # Copiar a yuca.local.sh para cambiar especificaciones sin versionar rutas personales.
 SPACK_SETUP=/shared/spack/share/spack/setup-env.sh
 CMAKE_SPEC='cmake@3.31.5%aocc@5.0.0 arch=linux-almalinux9-zen4'

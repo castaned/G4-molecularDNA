@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Uso: source env/setup.sh [simulation|analysis]
-# No cambiar opciones globales del shell de la estudiante.
+# No cambiar opciones globales del shell interactivo.
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
   echo 'Usar: source env/setup.sh [simulation|analysis]' >&2
   exit 2

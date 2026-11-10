@@ -1,6 +1,6 @@
 # G4-molecularDNA
 
-Guía y scripts para que una estudiante reproduzca simulaciones de daño al ADN
+Guía y scripts para reproducir simulaciones de daño al ADN
 con **molecularDNA, Geant4 11.3.0 y Slurm en YUCA (Universidad de Sonora)**.
 
 **Comenzar en [la guía paso a paso](docs/index.md).** Está preparada para publicarse
@@ -13,7 +13,7 @@ como página con GitHub Pages desde `main /docs`.
 3. Descargar el ejemplo oficial fijado a Geant4 11.3.0 y su geometría.
 4. Compilar el ejecutable `molecular` mediante Slurm.
 5. Preparar `smoke.json`: una tarea de dos eventos, sin visualización.
-6. Validar los archivos ROOT y después configurar una campaña de partículas/energías.
+6. Validar los archivos ROOT, graficar con las macros del ejemplo y configurar campañas.
 
 ```bash
 source env/setup.sh
@@ -32,7 +32,7 @@ son valores iniciales por medir, no asignaciones verificadas del clúster.
 
 | Ruta | Función |
 | --- | --- |
-| `config/yuca.sh` | Setup de referencia suministrado por Alfredo |
+| `config/yuca.sh` | Setup de referencia de YUCA |
 | `env/setup.sh` | Entorno C/C++, CMake, Geant4 y opcionalmente ROOT |
 | `scripts/fetch_example.sh` | Fuentes oficiales y geometrías |
 | `scripts/build.sh` | Compilación sin interfaz gráfica |
@@ -40,6 +40,11 @@ son valores iniciales por medir, no asignaciones verificadas del clúster.
 | `slurm/` | Compilación y array genérico para `human_cell` |
 | `config/smoke.json` | Prueba de dos electrones a 0.662 MeV |
 | `config/scan.json` | Protones y alfas a 1, 5 y 10 MeV; dos réplicas |
+| `config/alphas.json` | Campaña de alfas con límite de 12 horas por tarea |
+| `analysis/human_cell_electron.C` | Gráficas adaptadas de `human_cell.C` |
+| `analysis/human_cell_alphas.C` | Gráficas de alfas adaptadas a la geometría `human_cell` |
+| `analysis/human_cell_proton.C` | Gráficas del ejemplo adaptadas a protones |
+| `scripts/plot_task.py` | Selección de macro y graficación por tarea completa |
 | `analysis/inspect_output.C` | Comprobación estructural de las salidas ROOT |
 | `docs/` | Tutorial en español para GitHub Pages |
 | `tests/` | Pruebas de generación y envío simulado, sin Geant4 |
@@ -53,7 +58,8 @@ ni tiempos de ejecución como si ya hubieran sido medidos.
 
 ## Procedencia
 
-El repositorio descarga el ejemplo oficial; no redistribuye sus fuentes ni sus datasets.
+El repositorio descarga las fuentes y datasets oficiales. Incluye adaptaciones de
+sus macros de análisis, con atribución y licencia en `analysis/`.
 Versión: `v11.3.0`, commit `32390e802bd84a8b85ac02a90a3d31cf205dd5b7`.
 La geometría, química y fuente espacial de `human_cell.mac` se conservan.
 Solo se parametrizan partícula, energía, eventos, semillas y archivo de salida.

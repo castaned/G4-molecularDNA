@@ -9,7 +9,7 @@ Tutorial para reproducir el ejemplo **human_cell** de molecularDNA con
 Geant4 11.3.0, desde el entorno C++ hasta una campaña Slurm y la inspección en ROOT.
 
 La instalación de referencia es AlmaLinux 9, GCC 14.2.0 y CMake 3.31.5.
-Los paquetes ya instalados se cargan con Spack; la estudiante compila únicamente
+Los paquetes ya instalados se cargan con Spack; se compila únicamente
 el ejemplo molecularDNA. No necesita instalar Geant4 ni privilegios de administrador.
 
 ## 1. Acceso y herramientas
@@ -48,7 +48,7 @@ spack find -lv gcc
 spack find -lv cmake
 ```
 
-`config/yuca.sh` reproduce los specs suministrados por Alfredo:
+`config/yuca.sh` contiene los specs del entorno de referencia de YUCA:
 
 ```bash
 source /shared/spack/share/spack/setup-env.sh
@@ -210,9 +210,37 @@ Para análisis de dosis y rendimiento usar las definiciones del ejemplo y conser
 el número de primarios y la normalización por réplica. El identificador Event puede
 repetirse entre trabajos: identificar siempre campaña, tarea y evento.
 
-El código oficial `human_cell.C` se encuentra en las fuentes descargadas. Antes de
-usarlo, revisar el nombre del archivo de entrada y los supuestos de su normalización.
-No fusionar archivos de diferentes partículas o energías con `hadd`.
+### Graficar con las macros del ejemplo
+
+El análisis utiliza adaptaciones de los scripts oficiales del mismo ejemplo:
+
+| Partícula | Macro de graficación | Origen |
+| --- | --- | --- |
+| Electrones | `analysis/human_cell_electron.C` | `human_cell.C` |
+| Alfas | `analysis/human_cell_alphas.C` | `human_cell_alphas.C` |
+| Protones | `analysis/human_cell_proton.C` | `human_cell.C` |
+
+```bash
+source env/setup.sh analysis
+python3 scripts/plot_task.py runs/smoke-001 0
+# Para una tarea alfa terminada:
+python3 scripts/plot_task.py runs/alphas-001 0
+```
+
+El programa selecciona la macro según la partícula registrada y guarda PNG/PDF en
+`task_00000/plots/`. Comprueba finalización y número de primarios, y fusiona los
+archivos de workers únicamente dentro de esa tarea. No fusionar archivos de distintas
+partículas, energías o réplicas. No graficar archivos parciales de trabajos con TIMEOUT.
+
+Las macros conservan los cuatro paneles oficiales: especies, clases de daño,
+SSB por origen y DSB por origen. Todas usan la masa de la geometría `human_cell`;
+la macro alfa original tenía valores de HTB177 que se han adaptado. Verificar la
+longitud de ADN del log; el valor predeterminado de 6405.886128 Mbp procede de
+`human_cell.C` y se puede cambiar con `--dna-mbp`.
+
+Las barras de error del ejemplo son exploratorias y deben contrastarse con réplicas.
+La ejecución ROOT y la normalización numérica aún requieren validación en YUCA.
+Consultar [adaptaciones y uso directo de las macros](https://github.com/castaned/G4-molecularDNA/blob/main/analysis/README.md).
 
 ## 8. Campañas configurables
 
@@ -245,6 +273,48 @@ python3 scripts/campaign.py submit runs/scan-001
 El tamaño del array es partículas × energías × réplicas. Con dos CPU y dos trabajos
 simultáneos se solicitan hasta cuatro CPU a la vez. No aumentar la concurrencia
 sin revisar memoria, límites de Slurm y tiempo de la prueba inicial.
+
+### Alfas y trabajos que exceden el tiempo
+
+Se observó un trabajo de alfas terminado por `TIMEOUT` en YUCA. Por ello,
+`config/alphas.json` y el barrido mixto `config/scan.json` solicitan ahora
+**12 horas por tarea** (`"time": "12:00:00"`). Es un presupuesto inicial,
+no una garantía de finalización: depende de energía, eventos, hilos y química.
+
+```bash
+python3 scripts/campaign.py prepare config/alphas.json runs/alphas-001
+python3 scripts/campaign.py submit runs/alphas-001 --dry-run
+python3 scripts/campaign.py submit runs/alphas-001
+```
+
+Usar una partición que admita 12 horas; comprobar su máximo antes de enviar:
+
+```bash
+sinfo -o '%P %l %a'
+sacct -j ID --format=JobID,State,ExitCode,Elapsed,Timelimit,MaxRSS
+```
+
+Si el estado es `TIMEOUT`, Slurm agotó el tiempo de pared; no implica por sí mismo
+un error de física ni falta de memoria. Revisar el log para identificar si terminó
+la construcción de la geometría y cuántos eventos alcanzó. Aumentar el tiempo
+en el JSON antes de preparar otra campaña, por ejemplo a `"24:00:00"` si la
+partición lo permite, o reducir `events_per_job` y repartir primarios en más réplicas.
+El tiempo de inicialización se paga de nuevo en cada tarea y debe considerarse.
+No asumir que duplicar CPU reduce el tiempo a la mitad.
+
+Para reintentar, conservar el directorio fallido y usar uno nuevo:
+
+```bash
+# Editar time y/o events_per_job en config/alphas.json primero.
+python3 scripts/campaign.py prepare config/alphas.json runs/alphas-002
+python3 scripts/campaign.py submit runs/alphas-002
+```
+
+La preparación guarda una copia de la configuración; editar el JSON original no
+cambia el límite de una campaña ya preparada o enviada. No reutilizar salidas
+ROOT de un TIMEOUT como si representaran el número de eventos solicitado.
+Para ajustar recursos por partícula, preparar campañas separadas de electrones,
+protones y alfas; el límite de un array se aplica a todas sus tareas.
 
 La validación del JSON comprueba sintaxis y valores positivos; no certifica la
 validez física de una energía. Consultar el intervalo de los modelos para la versión

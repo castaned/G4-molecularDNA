@@ -18,7 +18,7 @@ La versión inicial se basa en las siguientes fuentes primarias:
 - [Slurm sbatch](https://slurm.schedmd.com/sbatch.html) y [job arrays](https://slurm.schedmd.com/job_array.html).
 - [GitHub Pages: fuente de publicación](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
-El setup Spack procede de la configuración de YUCA suministrada por Alfredo.
+El setup Spack procede de la configuración de referencia de YUCA.
 La versión de ROOT y los recursos de la cuenta todavía deben confirmarse en YUCA.
 
 Las fuentes y datos descargados mantienen sus licencias originales. Consultar
