@@ -57,5 +57,5 @@ La adaptación todavía requiere ejecución y comprobación numérica en ROOT/YU
 
 Autoría y licencia: se conservan las cabeceras de Konstantinos Chatzipapas y el
 equipo molecularDNA. Las partes derivadas del ejemplo están sujetas a la licencia
-Geant4 reproducida en `GEANT4-LICENSE.txt`. Las fuentes originales se descargan
-sin modificar en `vendor/geant4/`.
+Geant4 reproducida en `GEANT4-LICENSE.txt`. Las fuentes originales se copian
+desde la instalación local a `vendor/moleculardna/`, sin modificarlas.

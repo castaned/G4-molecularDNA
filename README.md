@@ -10,14 +10,14 @@ como página con GitHub Pages desde `main /docs`.
 
 1. Clonar este repositorio en YUCA.
 2. Cargar Spack, GCC y Geant4 con `source env/setup.sh`.
-3. Descargar el ejemplo oficial fijado a Geant4 11.3.0 y su geometría.
+3. Copiar molecularDNA y su geometría desde la instalación local de Geant4.
 4. Compilar el ejecutable `molecular` mediante Slurm.
 5. Preparar `smoke.json`: una tarea de dos eventos, sin visualización.
 6. Validar los archivos ROOT, graficar con las macros del ejemplo y configurar campañas.
 
 ```bash
 source env/setup.sh
-bash scripts/fetch_example.sh
+bash scripts/copy_example.sh
 sbatch slurm/build.slurm
 # Esperar a que termine la compilación sin errores.
 python3 scripts/campaign.py prepare config/smoke.json runs/smoke-001
@@ -34,7 +34,8 @@ son valores iniciales por medir, no asignaciones verificadas del clúster.
 | --- | --- |
 | `config/yuca.sh` | Setup de referencia de YUCA |
 | `env/setup.sh` | Entorno C/C++, CMake, Geant4 y opcionalmente ROOT |
-| `scripts/fetch_example.sh` | Fuentes oficiales y geometrías |
+| `scripts/copy_example.sh` | Copia local desde la instalación Geant4, sin descargar |
+| `scripts/local_example.py` | Localización, copia y verificación de fuentes/geometrías |
 | `scripts/build.sh` | Compilación sin interfaz gráfica |
 | `scripts/campaign.py` | Generación de macros, semillas, envío y ejecución |
 | `slurm/` | Compilación y array genérico para `human_cell` |
@@ -58,9 +59,11 @@ ni tiempos de ejecución como si ya hubieran sido medidos.
 
 ## Procedencia
 
-El repositorio descarga las fuentes y datasets oficiales. Incluye adaptaciones de
-sus macros de análisis, con atribución y licencia en `analysis/`.
-Versión: `v11.3.0`, commit `32390e802bd84a8b85ac02a90a3d31cf205dd5b7`.
+El ejemplo se copia desde la instalación local de Geant4 en YUCA al espacio de
+trabajo del usuario (`vendor/moleculardna`), sin descargarlo de Internet.
+Se registra su ubicación e inventario SHA-256; la compilación y las campañas
+comprueban que se usa esa copia. Incluye adaptaciones de las macros de análisis,
+con atribución y licencia en `analysis/`, basadas en Geant4 `v11.3.0`.
 La geometría, química y fuente espacial de `human_cell.mac` se conservan.
 Solo se parametrizan partícula, energía, eventos, semillas y archivo de salida.
 Consultar [fuentes y atribución](docs/references.md) y [publicación](docs/publishing.md).

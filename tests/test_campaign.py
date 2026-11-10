@@ -62,21 +62,22 @@ class CampaignTests(unittest.TestCase):
     def test_prepare_grid_seeds_and_submission(self):
         with workspace_temp() as tmp:
             repo = Path(tmp)
-            src = repo / "vendor/geant4/examples/advanced/dna/moleculardna"
+            src = repo / "vendor/moleculardna"
             src.mkdir(parents=True)
             (src / "human_cell.mac").write_text(TEMPLATE)
             build = repo / "build/molecular"
             (build / "geometries").mkdir(parents=True)
             (build / "geometries/cube-centred-X-8.txt").write_text("test geometry")
             (build / "molecular").write_text("placeholder, never executed")
+            metadata = {"source_kind": "local-geant4-installation", "files_sha256": {"human_cell.mac": c.digest(src / "human_cell.mac")}}
+            c.save_json(repo / "vendor/source.json", metadata)
+            c.save_json(build / "source.json", metadata)
             cfg = copy.deepcopy(self.cfg)
             cfg.update(particles=["proton", "alpha"], energies=[1, 5], replicas=3)
             config = repo / "config.json"
             c.save_json(config, cfg)
             destination = repo / "runs/test"
-            def git_output(args, **kwargs):
-                return c.UPSTREAM + "\n" if args[-1] == "HEAD" else ""
-            with patch.object(c, "REPO", repo), patch.object(subprocess, "check_output", side_effect=git_output):
+            with patch.object(c, "REPO", repo):
                 c.prepare(config, destination)
                 manifest = json.loads((destination / "manifest.json").read_text())
                 self.assertEqual(len(manifest["tasks"]), 12)

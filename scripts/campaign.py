@@ -14,7 +14,6 @@ import sys
 from datetime import datetime, timezone
 
 REPO = Path(__file__).resolve().parents[1]
-UPSTREAM = "32390e802bd84a8b85ac02a90a3d31cf205dd5b7"
 PARTICLES = {"e-", "proton", "alpha"}
 UNITS = {"eV", "keV", "MeV", "GeV"}
 
@@ -98,17 +97,21 @@ def save_json(path, data):
 def prepare(config, destination):
     cfg = json.loads(config.read_text(encoding="utf-8"))
     n = validate(cfg)
-    src = REPO / "vendor/geant4/examples/advanced/dna/moleculardna"
+    src = REPO / "vendor/moleculardna"
     build = REPO / "build/molecular"
     binary = build / "molecular"
     template = src / "human_cell.mac"
     geometry = build / "geometries"
     if not binary.is_file() or not template.is_file() or not geometry.is_dir():
-        raise ValueError("Primero descargar y compilar el ejemplo")
-    commit = subprocess.check_output(["git", "-C", str(REPO / "vendor/geant4"), "rev-parse", "HEAD"], text=True).strip()
-    dirty = subprocess.check_output(["git", "-C", str(REPO / "vendor/geant4"), "status", "--porcelain"], text=True)
-    if commit != UPSTREAM or dirty.strip():
-        raise ValueError("Fuentes upstream modificadas o versión incorrecta")
+        raise ValueError("Primero copiar y compilar el ejemplo local de Geant4")
+    provenance_file = REPO / "vendor/source.json"
+    provenance = json.loads(provenance_file.read_text(encoding="utf-8"))
+    current_files = {p.relative_to(src).as_posix(): digest(p) for p in sorted(src.rglob("*"))
+                     if p.is_file() and "geometries" not in p.relative_to(src).parts and p.name != "geometries.tar.gz"}
+    if not current_files or current_files != provenance["files_sha256"]:
+        raise ValueError("La copia local del ejemplo cambió después de registrarla")
+    if digest(build / "source.json") != digest(provenance_file):
+        raise ValueError("Recompilar molecularDNA: la procedencia del binario no coincide con las fuentes")
     template_string = template.read_text(encoding="utf-8")
     # Validar antes de crear carpetas.
     macro_text(template_string, cfg["particles"][0], cfg["energies"][0], cfg["unit"], cfg["events_per_job"], (1, 2))
@@ -130,7 +133,7 @@ def prepare(config, destination):
                 macro.write_text(macro_text(template_string, particle, energy, cfg["unit"], cfg["events_per_job"], seeds), encoding="utf-8")
                 tasks.append(dict(id=i, particle=particle, energy=energy, unit=cfg["unit"], replica=replica,
                                   events=cfg["events_per_job"], seeds=seeds, macro_sha256=digest(macro)))
-    save_json(destination / "manifest.json", dict(config=cfg, tasks=tasks, upstream_commit=commit,
+    save_json(destination / "manifest.json", dict(config=cfg, tasks=tasks, source_provenance=provenance,
         created_utc=datetime.now(timezone.utc).isoformat(), binary_sha256=digest(destination / "molecular"),
         template_sha256=digest(template), geometry=str(geometry.resolve()), geometry_sha256=geometry_hashes))
     print(f"Preparadas {n} tareas en {destination}")

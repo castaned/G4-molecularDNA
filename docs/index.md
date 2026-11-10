@@ -22,7 +22,7 @@ Los comandos siguientes se ejecutan en **Bash dentro de YUCA**, no en PowerShell
 git clone https://github.com/castaned/G4-molecularDNA.git
 cd G4-molecularDNA
 git rev-parse HEAD
-command -v git python3 curl sbatch srun
+command -v git python3 sbatch srun
 python3 --version
 ```
 
@@ -76,21 +76,53 @@ el entorno; los scripts Slurm incluidos ya lo hacen. Usar una sesión limpia si
 se habían cargado otras versiones. No se descargan bases de datos físicas durante
 los trabajos: deben estar disponibles con la instalación Geant4 de YUCA.
 
-## 3. Obtener molecularDNA y la geometría
+## 3. Copiar molecularDNA desde la instalación de Geant4
 
 ```bash
-bash scripts/fetch_example.sh
+bash scripts/copy_example.sh
 ```
 
-El script obtiene las fuentes oficiales de Geant4 11.3.0 en
-`vendor/geant4/examples/advanced/dna/moleculardna` y las geometrías oficiales.
-Comprueba el commit fijado y la suma MD5 publicada con ese dataset.
-No modifica el código C++ del ejemplo. La descarga requiere conexión a GitHub y CERN;
-se hace antes de enviar trabajos de cómputo.
+El ejemplo ya está disponible con Geant4 en YUCA: **no hace falta descargar
+molecularDNA de Internet**. El script consulta el prefijo de instalación mediante
+`spack location -i`, busca el ejemplo en sus carpetas `examples` y lo copia a
+`vendor/moleculardna`, dentro del repositorio del usuario. No modifica los archivos
+compartidos de Geant4. Guarda su procedencia y sumas SHA-256 en `vendor/source.json`.
 
-Si YUCA bloquea estas descargas, solicitar una transferencia autorizada del checkout
-oficial y de `geometries.tar.gz`. Colocar el archivo en `vendor/geometries.tar.gz`
-y repetir el script. No desactivar la verificación TLS ni la comprobación de integridad.
+Si los ejemplos están en otra ubicación, indicar la ruta exacta:
+
+```bash
+spack location -i "$GEANT4_SPEC"
+# Sustituir la ruta por la existente en YUCA:
+bash scripts/copy_example.sh /ruta/Geant4/examples/advanced/dna/moleculardna
+```
+
+También se reconocen rutas antiguas `examples/extended/medical/dna/moleculardna`.
+No se fija una ruta absoluta de YUCA sin haberla comprobado. Si no se encuentra
+el ejemplo bajo el prefijo instalado, localizar la carpeta de fuentes/ejemplos
+compartida y pasarla explícitamente.
+
+Las geometrías son archivos de datos adicionales. Si la copia del ejemplo ya trae
+`geometries/` o `geometries.tar.gz`, se reutilizan y copian/descomprimen localmente en
+`build/molecular/geometries`. Si están en otra carpeta, pasar un segundo argumento:
+
+```bash
+bash scripts/copy_example.sh /ruta/moleculardna /ruta/geometries
+# O usar un archivo de geometrías ya disponible localmente:
+bash scripts/copy_example.sh /ruta/moleculardna /ruta/geometries.tar.gz
+```
+
+Si faltan geometrías, el script se detiene con un mensaje; no intenta descargarlas.
+Indicar la ruta usada por una ejecución funcional o consultar la ubicación compartida
+con YUCA. Antes de compilar se comprueban los cuatro archivos que requiere `human_cell`;
+así el CMake oficial encuentra las geometrías preparadas y no entra en su descarga
+automática. La copia existente nunca se sobrescribe silenciosamente.
+
+Para migrar desde una versión previa de esta guía que usaba un checkout en
+`vendor/geant4`, conservarlo como referencia; ya no se usa para nuevas compilaciones.
+Si ya existe `build/molecular/geometries`, indicar esa misma carpeta como segundo
+argumento, tras comprobar que corresponde a la geometría del ejemplo.
+Si el CMake cache anterior apunta al checkout viejo, renombrar `build/molecular`
+como respaldo y volver a preparar la copia/geometrías antes de compilar.
 
 ## 4. Compilar con Slurm
 
@@ -329,7 +361,7 @@ inicial; otros iones requieren configuración GPS y revisión de modelos adicion
 | Spack encuentra varios paquetes | Fijar un hash de instalación en `yuca.local.sh` |
 | `Illegal instruction` | Verificar CPU del nodo y spec `zen4` con YUCA |
 | Falta dataset Geant4 | Revisar instalación y variables de datos del entorno |
-| Falla la descarga de geometrías | Transferir dataset oficial y verificar su suma |
+| No se encuentran fuentes o geometrías locales | Indicar sus rutas en `copy_example.sh`; no se usa descarga automática |
 | `geometries/...` no encontrado | Ejecutar mediante el runner que crea el enlace |
 | No existe `molecular` | Revisar salida del trabajo de compilación |
 | `TIMEOUT` o `OUT_OF_MEMORY` | Medir `sacct` y ajustar tiempo/memoria en una nueva campaña |
