@@ -49,3 +49,28 @@
 @media print {
   .main-content .code-copy-toolbar { display: none; }
 }
+
+/* YUCA learning guide: static DNA illustration and clear navigation. */
+body { background: #f6f9fc; }
+.main-content { background: #fff; }
+.page-header { background-color: #12364b; background-image: linear-gradient(115deg,#12364b,#146b78 58%,#17896c); }
+.main-content .dna-hero { display:flex; align-items:center; gap:2rem; margin:1.5rem 0; padding:2rem; border-radius:18px; background:linear-gradient(120deg,#102e46,#145b67); color:#fff; }
+.main-content .dna-hero h2 { margin:0.4rem 0 0.8rem; color:#fff; font-size:1.8rem; }
+.main-content .dna-hero p { margin:0; color:#e0eff3; }
+.main-content .dna-label { font-size:0.75rem; font-weight:700; letter-spacing:0.12em; color:#80e6d4; }
+.main-content .dna-art { width:115px; min-width:85px; height:180px; }
+.main-content .recipe-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin:1.5rem 0 2rem; }
+.main-content .recipe-card { display:block; padding:1.2rem; border:1px solid #dbe7ed; border-top:4px solid #178777; border-radius:12px; color:#264657; background:#f8fbfd; text-decoration:none; }
+.main-content .recipe-card:hover { background:#edf7f6; border-color:#178777; }
+.main-content .recipe-card:focus-visible { outline:3px solid #155799; outline-offset:3px; }
+.main-content .recipe-card strong { display:block; margin:.5rem 0; font-size:1.05rem; color:#145f63; }
+.main-content .recipe-card span { font-size:.88rem; }
+.main-content .recipe-step { font-size:.75rem; font-weight:bold; letter-spacing:.06em; color:#607786; }
+.main-content h2 { padding-top:.8rem; }
+@media(max-width:650px) {
+ .main-content .recipe-grid { grid-template-columns:1fr; }
+ .main-content .dna-hero { padding:1.3rem; gap:1rem; }
+ .main-content .dna-hero h2 { font-size:1.35rem; }
+ .main-content .dna-art { width:75px; min-width:65px; }
+}
+@media print { .main-content .dna-hero { background:#fff; color:#12364b; } .main-content .dna-hero h2,.main-content .dna-hero p { color:#12364b; } }
