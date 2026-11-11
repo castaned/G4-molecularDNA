@@ -14,5 +14,15 @@ class AnalysisMacroTests(unittest.TestCase):
                 used = set(re.findall(r'\bSD_\w+\b', code))
                 declarations = re.findall(r'\b(?:Float_t|Double_t)\s+([^;]+);', code)
                 declared = {name for statement in declarations for name in re.findall(r'\bSD_\w+\b', statement)}
-                self.assertTrue(used)
                 self.assertEqual(used - declared, set(), "Variables SD utilizadas sin declarar")
+
+    def test_plots_do_not_report_unvalidated_or_undefined_errors(self):
+        folder = Path(__file__).resolve().parents[1] / "analysis"
+        for particle in ("electron", "alphas", "proton"):
+            with self.subTest(particle=particle):
+                code = (folder / f"human_cell_{particle}.C").read_text(encoding="utf-8")
+                self.assertNotIn("new TGraphErrors", code)
+                self.assertNotIn('" error %: "', code)
+                self.assertNotIn("sqrt(", code)
+                self.assertIn("Uncertainty: not estimated", code)
+                self.assertIn("N/D (DSB=0)", code)

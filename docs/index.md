@@ -276,7 +276,10 @@ la macro alfa original tenía valores de HTB177 que se han adaptado. Verificar l
 longitud de ADN del log; el valor predeterminado de 6405.886128 Mbp procede de
 `human_cell.C` y se puede cambiar con `--dna-mbp`.
 
-Las barras de error del ejemplo son exploratorias y deben contrastarse con réplicas.
+Las gráficas muestran valores centrales sin barras de error: las fórmulas heredadas
+se retiraron porque podían generar varianzas negativas y porcentajes indefinidos.
+`uncertainty: N/D` significa incertidumbre no determinada, no error cero.
+Las incertidumbres requieren un análisis por evento o réplicas independientes.
 La ejecución ROOT y la normalización numérica aún requieren validación en YUCA.
 Consultar [adaptaciones y uso directo de las macros](https://github.com/castaned/G4-molecularDNA/blob/main/analysis/README.md).
 

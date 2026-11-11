@@ -1,14 +1,14 @@
 // Adapted from Geant4 v11.3.0 human_cell.C for the human_cell geometry.
 // Original four-panel plots and yield conventions retained.
 // No automatic hadd; select ONE complete particle/energy task.
-// Fragment pooling omitted; statistical errors remain inherited/exploratory.
+// Fragment pooling omitted; uncertainties are not estimated by this macro.
 // See analysis/README.md for modifications, scope and validation status.
 #include <TCanvas.h>
 #include <TFile.h>
 #include <TTree.h>
 #include <TH1.h>
 #include <TH1F.h>
-#include <TGraphErrors.h>
+#include <TGraph.h>
 #include <TStyle.h>
 #include <TPad.h>
 #include <TROOT.h>
@@ -122,9 +122,6 @@ for (const char* name : {"primary_source", "damage", "classification", "source",
 Int_t EB = 0, ES = 0, OHB = 0, OHS = 0, HB = 0, HS = 0, FL = 0;
 Int_t total_EB = 0, total_ES = 0, total_OHB = 0, total_OHS = 0, total_HB = 0, total_HS = 0, total_FL = 0;
 Float_t total_EB2 = 0, total_ES2 = 0, total_OHB2 = 0, total_OHS2 = 0, total_HB2 = 0, total_HS2 = 0, total_FL2 = 0;
-Float_t SD_EB = 0, SD_ES = 0, SD_OHB = 0, SD_OHS = 0, SD_HB = 0, SD_HS = 0;
-Float_t SD_SSB = 0, SD_SSBp = 0, SD_SSB2p = 0, SD_sSSB = 0, SD_SSBd = 0, SD_SSBi = 0, SD_SSBm = 0;
-Float_t SD_DSB = 0, SD_DSBp = 0, SD_DSBpp = 0, SD_sDSB = 0, SD_DSBd = 0, SD_DSBi = 0, SD_DSBm = 0, SD_DSBh = 0;
 
 Int_t SSB = 0, SSBp = 0, SSB2p = 0;
 Int_t total_SSB = 0, total_SSBp = 0, total_SSB2p = 0;
@@ -141,20 +138,14 @@ Int_t total_sDSB = 0, total_DSBd = 0, total_DSBi = 0, total_DSBm = 0, total_DSBh
 Float_t total_sDSB2 = 0, total_DSBd2 = 0, total_DSBi2 = 0, total_DSBm2 = 0, total_DSBh2 = 0;
 
 Double_t dose = 0;
-Double_t SD_dose = 0;
 
 Double_t EB_yield = 0; Double_t ES_yield = 0; Double_t OHB_yield = 0; Double_t OHS_yield = 0; Double_t HB_yield = 0; Double_t HS_yield = 0;
-Double_t SD_EB_yield = 0; Double_t SD_ES_yield = 0; Double_t SD_OHB_yield = 0; Double_t SD_OHS_yield = 0; Double_t SD_HB_yield = 0; Double_t SD_HS_yield = 0;
 
 Double_t SSB_yield = 0; Double_t SSBp_yield = 0; Double_t SSB2p_yield = 0;
-Double_t SD_SSB_yield = 0; Double_t SD_SSBp_yield = 0; Double_t SD_SSB2p_yield = 0;
 Double_t DSB_yield = 0; Double_t DSBp_yield = 0; Double_t DSBpp_yield = 0;
-Double_t SD_DSB_yield = 0; Double_t SD_DSBp_yield = 0; Double_t SD_DSBpp_yield = 0;
 
 Double_t sSSB_yield = 0; Double_t SSBi_yield = 0; Double_t SSBd_yield = 0; Double_t SSBm_yield = 0;
-Double_t SD_sSSB_yield = 0; Double_t SD_SSBi_yield = 0; Double_t SD_SSBd_yield = 0; Double_t SD_SSBm_yield = 0;
 Double_t sDSB_yield = 0; Double_t DSBi_yield = 0; Double_t DSBd_yield = 0; Double_t DSBm_yield = 0; Double_t DSBh_yield = 0;
-Double_t SD_sDSB_yield = 0; Double_t SD_DSBi_yield = 0; Double_t SD_DSBd_yield = 0; Double_t SD_DSBm_yield = 0; Double_t SD_DSBh_yield = 0;
 
 total_EB  = 0; total_ES = 0; total_OHB = 0; total_OHS = 0; total_HB = 0; total_HS = 0;
 
@@ -222,16 +213,10 @@ for(int i = 0;i<nentries;i++){
   }
 
 // Fragment plot omitted: upstream pooling mixes independent events/chains.
-// Calculate the standard deviation of species
-SD_EB  = sqrt(((total_EB2  / number) - pow(total_EB  / number,2))/(number -1));
-SD_ES  = sqrt(((total_ES2  / number) - pow(total_ES  / number,2))/(number -1));
-SD_OHB = sqrt(((total_OHB2 / number) - pow(total_OHB / number,2))/(number -1));
-SD_OHS = sqrt(((total_OHS2 / number) - pow(total_OHS / number,2))/(number -1));
-SD_HB  = sqrt(((total_HB2  / number) - pow(total_HB  / number,2))/(number -1));
-SD_HS  = sqrt(((total_HS2  / number) - pow(total_HS  / number,2))/(number -1));
+// Uncertainties require a separate event/replica-level analysis.
 
 // Read damage classification SSB, SSB+, 2SSB, DSB, DSB+, DSB++
-// As they have been defined in: Nikjoo, H., O’Neill, O., Goodhead, T., & Terrissol, M. 1997,
+// As they have been defined in: Nikjoo, H., O'Neill, O., Goodhead, T., & Terrissol, M. 1997,
 // Computational modelling of low-energy electron-induced DNA damage by early physical
 // and chemical events, International Journal of Radiation Biology, 71, 467.
 tree = (TTree *) f->Get("tuples/classification");
@@ -265,17 +250,11 @@ for(int i = 0;i<nentriesC;i++){
 
   }
 
-// Calculate the standard deviation
-SD_SSB   = sqrt(((total_SSB2   / number) - pow(total_SSB   / number,2))/(number -1));
-SD_SSBp  = sqrt(((total_SSBp2  / number) - pow(total_SSBp  / number,2))/(number -1));
-SD_SSB2p = sqrt(((total_SSB2p2 / number) - pow(total_SSB2p / number,2))/(number -1));
+// Uncertainties require a separate event/replica-level analysis.
 
-SD_DSB   = sqrt(((total_DSB2   / number) - pow(total_DSB   / number,2))/(number -1));
-SD_DSBp  = sqrt(((total_DSBp2  / number) - pow(total_DSBp  / number,2))/(number -1));
-SD_DSBpp = sqrt(((total_DSBpp2 / number) - pow(total_DSBpp / number,2))/(number -1));
 
 // Read damage classification SSBd, SSBi, SSBm, DSBd, DSBi, DSBm, DSBh
-// As they have been defined in: Nikjoo, H., O’Neill, O., Goodhead, T., & Terrissol, M. 1997,
+// As they have been defined in: Nikjoo, H., O'Neill, O., Goodhead, T., & Terrissol, M. 1997,
 // Computational modelling of low-energy electron-induced DNA damage by early physical
 // and chemical events, International Journal of Radiation Biology, 71, 467.
 tree = (TTree *) f->Get("tuples/source");
@@ -315,17 +294,8 @@ for(int i = 0;i<nentriesS;i++){
 
   }
 
-// Calculate the standard deviation
-SD_sSSB = sqrt(((total_sSSB2 / number) - pow(total_sSSB / number,2))/(number -1));
-SD_SSBd = sqrt(((total_SSBd2 / number) - pow(total_SSBd / number,2))/(number -1));
-SD_SSBi = sqrt(((total_SSBi2 / number) - pow(total_SSBi / number,2))/(number -1));
-SD_SSBm = sqrt(((total_SSBm2 / number) - pow(total_SSBm / number,2))/(number -1));
+// Uncertainties require a separate event/replica-level analysis.
 
-SD_sDSB = sqrt(((total_sDSB2 / number) - pow(total_sDSB / number,2))/(number -1));
-SD_DSBd = sqrt(((total_DSBd2 / number) - pow(total_DSBd / number,2))/(number -1));
-SD_DSBi = sqrt(((total_DSBi2 / number) - pow(total_DSBi / number,2))/(number -1));
-SD_DSBm = sqrt(((total_DSBm2 / number) - pow(total_DSBm / number,2))/(number -1));
-SD_DSBh = sqrt(((total_DSBh2 / number) - pow(total_DSBh / number,2))/(number -1));
 
 
 // Measure the Deposited Energy in the whole volume that includes DNA chain (chromosome)
@@ -366,12 +336,6 @@ OHS_yield = (Double_t) total_OHS / dose / Nbp;
 HB_yield  = (Double_t) total_HB  / dose / Nbp;
 HS_yield  = (Double_t) total_HS  / dose / Nbp;
 
-SD_EB_yield  = SD_EB  / dose / Nbp;
-SD_ES_yield  = SD_ES  / dose / Nbp;
-SD_OHB_yield = SD_OHB / dose / Nbp;
-SD_OHS_yield = SD_OHS / dose / Nbp;
-SD_HB_yield  = SD_HB  / dose / Nbp;
-SD_HS_yield  = SD_HS  / dose / Nbp;
 
 
 SSB_yield   = (Double_t) norm * total_SSB   / dose / Nbp;
@@ -382,13 +346,7 @@ DSB_yield   = (Double_t) norm * total_DSB   / dose / Nbp;
 DSBp_yield  = (Double_t) norm * total_DSBp  / dose / Nbp;
 DSBpp_yield = (Double_t) norm * total_DSBpp / dose / Nbp;
 
-SD_SSB_yield   = norm * SD_SSB   / dose / Nbp;
-SD_SSBp_yield  = norm * SD_SSBp  / dose / Nbp;
-SD_SSB2p_yield = norm * SD_SSB2p / dose / Nbp;
 
-SD_DSB_yield   = norm * SD_DSB   / dose / Nbp;
-SD_DSBp_yield  = norm * SD_DSBp  / dose / Nbp;
-SD_DSBpp_yield = norm * SD_DSBpp / dose / Nbp;
 
 
 sSSB_yield = (Double_t) norm * total_sSSB / dose / Nbp;
@@ -402,16 +360,7 @@ DSBd_yield = (Double_t) norm * total_DSBd / dose / Nbp;
 DSBm_yield = (Double_t) norm * total_DSBm / dose / Nbp;
 DSBh_yield = (Double_t) norm * total_DSBh / dose / Nbp;
 
-SD_sSSB_yield = norm * SD_sSSB / dose / Nbp;
-SD_SSBi_yield = norm * SD_SSBi / dose / Nbp;
-SD_SSBd_yield = norm * SD_SSBd / dose / Nbp;
-SD_SSBm_yield = norm * SD_SSBm / dose / Nbp;
 
-SD_sDSB_yield = norm * SD_sDSB / dose / Nbp;
-SD_DSBi_yield = norm * SD_DSBi / dose / Nbp;
-SD_DSBd_yield = norm * SD_DSBd / dose / Nbp;
-SD_DSBm_yield = norm * SD_DSBm / dose / Nbp;
-SD_DSBh_yield = norm * SD_DSBh / dose / Nbp;
 
 
 // Print output in terminal
@@ -426,32 +375,32 @@ cout<<"\n"                      <<ifile         <<'\n'
     <<"Number of Primaries : "  <<number        <<'\n'
     <<"  Output Damage : "                      <<'\n'<<'\t'
     <<"     Species Hits (Gy-1 Mbp-1) "      <<'\n'<<'\t'
-    <<"EaqBaseHits   : "     <<EB_yield     <<"   \t"      <<" error %: "   <<100*SD_EB_yield/EB_yield        <<'\n'<<'\t'
-    <<"EaqStrandHits : "     <<ES_yield     <<"   \t"      <<" error %: "   <<100*SD_ES_yield/ES_yield        <<'\n'<<'\t'
-    <<"OHBaseHits    : "     <<OHB_yield    <<"   \t"      <<" error %: "   <<100*SD_OHB_yield/OHB_yield      <<'\n'<<'\t'
-    <<"OHStrandHits  : "     <<OHS_yield    <<"   \t"      <<" error %: "   <<100*SD_OHS_yield/OHS_yield      <<'\n'<<'\t'
-    <<"HBaseHits     : "     <<HB_yield     <<"   \t"      <<" error %: "   <<100*SD_HB_yield/HB_yield        <<'\n'<<'\t'
-    <<"HStrandHits   : "     <<HS_yield     <<"   \t"      <<" error %: "   <<100*SD_HS_yield/HS_yield        <<'\n'<<'\n'<<'\t'
+    <<"EaqBaseHits   : "     <<EB_yield     <<"   \t"      <<" uncertainty: N/D"        <<'\n'<<'\t'
+    <<"EaqStrandHits : "     <<ES_yield     <<"   \t"      <<" uncertainty: N/D"        <<'\n'<<'\t'
+    <<"OHBaseHits    : "     <<OHB_yield    <<"   \t"      <<" uncertainty: N/D"      <<'\n'<<'\t'
+    <<"OHStrandHits  : "     <<OHS_yield    <<"   \t"      <<" uncertainty: N/D"      <<'\n'<<'\t'
+    <<"HBaseHits     : "     <<HB_yield     <<"   \t"      <<" uncertainty: N/D"        <<'\n'<<'\t'
+    <<"HStrandHits   : "     <<HS_yield     <<"   \t"      <<" uncertainty: N/D"        <<'\n'<<'\n'<<'\t'
     <<"     Damage yield (Gy-1 Gbp-1) "      <<'\n'<<'\t'
-    <<"SSB           : "     <<SSB_yield    <<"   \t"      <<" error %: "   <<100*SD_SSB_yield/SSB_yield      <<'\n'<<'\t'
-    <<"SSB+          : "     <<SSBp_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBp_yield/SSBp_yield    <<'\n'<<'\t'
-    <<"2SSB          : "     <<SSB2p_yield  <<"   \t"      <<" error %: "   <<100*SD_SSB2p_yield/SSB2p_yield  <<'\n'<<'\t'
+    <<"SSB           : "     <<SSB_yield    <<"   \t"      <<" uncertainty: N/D"      <<'\n'<<'\t'
+    <<"SSB+          : "     <<SSBp_yield   <<"   \t"      <<" uncertainty: N/D"    <<'\n'<<'\t'
+    <<"2SSB          : "     <<SSB2p_yield  <<"   \t"      <<" uncertainty: N/D"  <<'\n'<<'\t'
     <<"SSB total     : "     <<total_SSB_totalYield        <<'\n'<<'\t'
-    <<"DSB           : "     <<DSB_yield    <<"   \t"      <<" error %: "   <<100*SD_DSB_yield/DSB_yield     <<'\n'<<'\t'
-    <<"DSB+          : "     <<DSBp_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBp_yield/DSBp_yield   <<'\n'<<'\t'
-    <<"DSB++         : "     <<DSBpp_yield  <<"   \t"      <<" error %: "   <<100*SD_DSBpp_yield/DSBpp_yield <<'\n'<<'\t'
+    <<"DSB           : "     <<DSB_yield    <<"   \t"      <<" uncertainty: N/D"     <<'\n'<<'\t'
+    <<"DSB+          : "     <<DSBp_yield   <<"   \t"      <<" uncertainty: N/D"   <<'\n'<<'\t'
+    <<"DSB++         : "     <<DSBpp_yield  <<"   \t"      <<" uncertainty: N/D" <<'\n'<<'\t'
     <<"DSB total     : "     <<total_DSB_totalYield        <<'\n'<<'\n'<<'\t'
     <<"     Breaks yield (Gy-1 Gbp-1) "      <<'\n'<<'\t'
-    <<"SSB direct    : "     <<SSBd_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBd_yield/SSBd_yield   <<'\n'<<'\t'
-    <<"SSB indirect  : "     <<SSBi_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBi_yield/SSBi_yield   <<'\n'<<'\t'
-    <<"SSB mixed     : "     <<SSBm_yield   <<"   \t"      <<" error %: "   <<100*SD_SSBm_yield/SSBi_yield   <<'\n'<<'\t'
-    <<"SSB total     : "     <<sSSB_yield   <<"   \t"      <<" error %: "   <<100*SD_sSSB_yield/sSSB_yield   <<'\n'<<'\t'
-    <<"DSB direct    : "     <<DSBd_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBd_yield/DSBd_yield   <<'\n'<<'\t'
-    <<"DSB indirect  : "     <<DSBi_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBi_yield/DSBi_yield   <<'\n'<<'\t'
-    <<"DSB mixed     : "     <<DSBm_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBm_yield/DSBm_yield   <<'\n'<<'\t'
-    <<"DSB hybrid    : "     <<DSBh_yield   <<"   \t"      <<" error %: "   <<100*SD_DSBh_yield/DSBh_yield   <<'\n'<<'\t'
-    <<"DSB total     : "     <<sDSB_yield   <<"   \t"      <<" error %: "   <<100*SD_sDSB_yield/sDSB_yield   <<'\n'<<'\n'<<'\t'
-    <<"SSB/DSB       : "     <<(sDSB_yield > 0 ? sSSB_yield/sDSB_yield : 0)       <<'\n'<<'\n';
+    <<"SSB direct    : "     <<SSBd_yield   <<"   \t"      <<" uncertainty: N/D"   <<'\n'<<'\t'
+    <<"SSB indirect  : "     <<SSBi_yield   <<"   \t"      <<" uncertainty: N/D"   <<'\n'<<'\t'
+    <<"SSB mixed     : "     <<SSBm_yield   <<"   \t"      <<" uncertainty: N/D"   <<'\n'<<'\t'
+    <<"SSB total     : "     <<sSSB_yield   <<"   \t"      <<" uncertainty: N/D"   <<'\n'<<'\t'
+    <<"DSB direct    : "     <<DSBd_yield   <<"   \t"      <<" uncertainty: N/D"   <<'\n'<<'\t'
+    <<"DSB indirect  : "     <<DSBi_yield   <<"   \t"      <<" uncertainty: N/D"   <<'\n'<<'\t'
+    <<"DSB mixed     : "     <<DSBm_yield   <<"   \t"      <<" uncertainty: N/D"   <<'\n'<<'\t'
+    <<"DSB hybrid    : "     <<DSBh_yield   <<"   \t"      <<" uncertainty: N/D"   <<'\n'<<'\t'
+    <<"DSB total     : "     <<sDSB_yield   <<"   \t"      <<" uncertainty: N/D"   <<'\n'<<'\n'<<'\t'
+    <<"SSB/DSB       : "     <<(sDSB_yield > 0 ? to_string(sSSB_yield/sDSB_yield) : string("N/D (DSB=0)"))       <<'\n'<<'\n';
 
 
 // Plot Histograms
@@ -461,8 +410,7 @@ pad1->cd();
 const Int_t n = 6;
 Double_t x[n] = {1,2,3,4,5,6};
 Double_t y[n] = {EB_yield,ES_yield,OHB_yield,OHS_yield,HB_yield,HS_yield};
-Double_t err_y[n] = {SD_EB_yield,SD_ES_yield,SD_OHB_yield,SD_OHS_yield,SD_HB_yield,SD_HS_yield};
-TGraph* gr = new TGraphErrors(n,x,y,0,err_y);
+TGraph* gr = new TGraph(n,x,y);
 gr->SetTitle("Species");
 gr->GetXaxis()->SetBinLabel(9, "EaqBaseHits");
 gr->GetXaxis()->SetBinLabel(25,"EaqStrandHits");
@@ -480,8 +428,7 @@ gr->Draw("ba");
 pad2->cd();
 Double_t x2[n] = {1,2,3,4,5,6};
 Double_t y2[n] = {SSBp_yield,SSB2p_yield,SSB_yield,DSBp_yield,DSBpp_yield,DSB_yield};
-Double_t err_y2[n] = {SD_SSBp_yield,SD_SSB2p_yield,SD_SSB_yield,SD_DSBp_yield,SD_DSBpp_yield,SD_DSB_yield};
-TGraph* gr2 = new TGraphErrors(n,x2,y2,0,err_y2);
+TGraph* gr2 = new TGraph(n,x2,y2);
 gr2->SetTitle("Damage Yield");
 gr2->GetXaxis()->SetBinLabel(9, "SSB+");
 gr2->GetXaxis()->SetBinLabel(25,"2SSB");
@@ -501,8 +448,7 @@ pad3->cd();
 const Int_t m = 4;
 Double_t x3[m] = {1,2,3,4};
 Double_t y3[m] = {SSBd_yield,SSBi_yield,SSBm_yield,sSSB_yield};
-Double_t err_y3[m] = {SD_SSBd_yield,SD_SSBi_yield,SD_SSBm_yield,SD_sSSB_yield};
-TGraph* gr3 = new TGraphErrors(m,x3,y3,0,err_y3);
+TGraph* gr3 = new TGraph(m,x3,y3);
 gr3->SetTitle("Breaks Yield");
 gr3->GetXaxis()->SetBinLabel(8, "SSB direct");
 gr3->GetXaxis()->SetBinLabel(35,"SSB indirect");
@@ -520,8 +466,7 @@ pad4->cd();
 const Int_t k = 5;
 Double_t x4[k] = {1,2,3,4,5};
 Double_t y4[k] = {DSBd_yield,DSBi_yield,DSBm_yield,DSBh_yield,sDSB_yield};
-Double_t err_y4[k] = {SD_DSBd_yield,SD_DSBi_yield,SD_DSBm_yield,SD_DSBh_yield,SD_sDSB_yield};
-TGraph* gr4 = new TGraphErrors(k,x4,y4,0,err_y4);
+TGraph* gr4 = new TGraph(k,x4,y4);
 gr4->SetTitle("Breaks Yield");
 gr4->GetXaxis()->SetBinLabel(8,"DSB direct");
 gr4->GetXaxis()->SetBinLabel(29,"DSB indirect");
@@ -537,5 +482,5 @@ gr4->Draw("ba");
 gSystem->mkdir(output, true);
 c1->SaveAs((string(output) + "/human_cell_proton.png").c_str());
 c1->SaveAs((string(output) + "/human_cell_proton.pdf").c_str());
-cout << "NOTE: inherited error estimates are exploratory; assess uncertainty with independent replicas." << endl;
+cout << "Uncertainty: not estimated. Central values only; evaluate uncertainty using independent replicas." << endl;
 }

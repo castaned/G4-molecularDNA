@@ -49,9 +49,16 @@ partícula de la macro y que contenga todos los primarios previstos.
 - Se omite el panel de fragmentos del original, que ordenaba posiciones de
   diferentes eventos/cadenas conjuntamente. Requiere un análisis separado.
 
-Se conservan las convenciones de dosis, rendimientos y errores del ejemplo original.
-**Las barras de error heredadas son exploratorias**: no sustituyen una estimación
-de incertidumbre con réplicas independientes. Las gráficas cuentan interacciones
+Se conservan las convenciones de dosis y rendimientos del ejemplo original.
+**Solo se muestran valores centrales, sin barras de error**. Se retiraron las
+fórmulas de incertidumbre heredadas: acumulan contribuciones de filas de daño,
+pero las normalizan usando el número de primarios, lo que puede producir una
+varianza negativa incluso cuando el rendimiento no es cero. Además, un porcentaje
+relativo a un rendimiento cero no está definido. Se imprime `uncertainty: N/D`
+(no determinada); no significa incertidumbre cero.
+Para estimar incertidumbres hace falta un análisis por evento o réplicas independientes,
+incluyendo la normalización de dosis. `SSB/DSB` también se muestra como `N/D` si DSB es cero.
+Las gráficas cuentan interacciones
 con ADN de las especies, no todas las especies químicas producidas en el agua.
 La adaptación todavía requiere ejecución y comprobación numérica en ROOT/YUCA.
 
