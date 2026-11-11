@@ -122,7 +122,7 @@ Int_t EB = 0, ES = 0, OHB = 0, OHS = 0, HB = 0, HS = 0, FL = 0;
 Int_t total_EB = 0, total_ES = 0, total_OHB = 0, total_OHS = 0, total_HB = 0, total_HS = 0, total_FL = 0;
 Float_t total_EB2 = 0, total_ES2 = 0, total_OHB2 = 0, total_OHS2 = 0, total_HB2 = 0, total_HS2 = 0, total_FL2 = 0;
 Float_t SD_EB = 0, SD_ES = 0, SD_OHB = 0, SD_OHS = 0, SD_HB = 0, SD_HS = 0;
-Float_t SD_SSB = 0, SD_SSBp = 0, SD_SSB2p = 0, SD_sSSB = 0, SD_SSBd = 0, SD_SSBi = 0;
+Float_t SD_SSB = 0, SD_SSBp = 0, SD_SSB2p = 0, SD_sSSB = 0, SD_SSBd = 0, SD_SSBi = 0, SD_SSBm = 0;
 Float_t SD_DSB = 0, SD_DSBp = 0, SD_DSBpp = 0, SD_sDSB = 0, SD_DSBd = 0, SD_DSBi = 0, SD_DSBm = 0, SD_DSBh = 0;
 
 Int_t SSB = 0, SSBp = 0, SSB2p = 0;
