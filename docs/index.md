@@ -1,6 +1,6 @@
 ---
 layout: default
-title: molecularDNA en YUCA — empieza aquí
+title: molecularDNA en YUCA
 ---
 
 # Generar resultados con molecularDNA en YUCA
@@ -11,7 +11,7 @@ title: molecularDNA en YUCA — empieza aquí
 <h2>De la simulación al daño en el ADN</h2>
 <p>Prepara el entorno, ejecuta tus simulaciones y obtén gráficas paso a paso.</p>
 </div>
-{% for asset in site.static_files %}{% if asset.path == '/assets/images/dna-simulation.jpg' %}<img class="dna-simulation" src="{{ '/assets/images/dna-simulation.jpg' | relative_url }}" alt="Visualización molecular del ADN con trayectorias de partículas en Geant4" width="160" height="140">{% endif %}{% endfor %}
+{% for asset in site.static_files %}{% if asset.path == '/assets/images/dna-simulation.jpg' %}<a class="dna-image-link" href="{{ '/assets/images/dna-simulation.jpg' | relative_url }}" aria-label="Ampliar visualización del ADN"><img class="dna-simulation" src="{{ '/assets/images/dna-simulation.jpg' | relative_url }}" alt="Visualización molecular del ADN con trayectorias de partículas en Geant4" width="210" height="184"></a>{% endif %}{% endfor %}
 </div>
 
 <div class="recipe-grid">
