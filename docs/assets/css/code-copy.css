@@ -79,5 +79,9 @@ body { background: #f6f9fc; }
 .main-content .dna-hero { padding:1rem 1.25rem; margin:1rem 0; gap:1.25rem; }
 .main-content .dna-hero h2 { font-size:1.25rem; margin:.25rem 0 .4rem; }
 .main-content .dna-hero p { font-size:.9rem; }
-.main-content .dna-simulation { display:block; width:160px; height:auto; max-height:140px; object-fit:contain; border-radius:6px; background:#fff; }
-@media(max-width:650px) { .main-content .dna-simulation { width:100px; max-height:100px; } }
+.main-content .dna-simulation { display:block; width:210px; height:auto; max-height:184px; object-fit:contain; border-radius:10px; background:#fff; border:2px solid #91e5d6; box-shadow:0 5px 20px #001c4266; }
+@media(max-width:650px) { .main-content .dna-simulation { width:120px; max-height:110px; } }
+
+.main-content .dna-image-link { display:block; flex:0 0 auto; margin-left:auto; border-radius:10px; }
+.main-content .dna-image-link:hover { box-shadow:0 0 0 3px #65e1c566; }
+.main-content .dna-image-link:focus-visible { outline:3px solid #fff; outline-offset:4px; }
