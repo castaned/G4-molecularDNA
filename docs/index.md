@@ -3,22 +3,19 @@ layout: default
 title: molecularDNA en YUCA — empieza aquí
 ---
 
-# Generar resultados con molecularDNA
+# Generar resultados con molecularDNA en YUCA
 
-**Esta guía es una receta. Copia un bloque, ejecútalo y comprueba el resultado
-antes de pasar al siguiente.**
+Esta guía utiliza el clúster **YUCA** para simular el daño en el ADN con
+molecularDNA. Ejecuta los comandos en una terminal de YUCA.
 
-Abre una terminal de **YUCA**. Todos los comandos de esta página se ejecutan allí,
-no en PowerShell de Windows.
+Copia cada bloque y comprueba el resultado antes de continuar.
 
-**¿Ya compilaste el ejemplo?** Ve directamente a una receta:
+## Preparación inicial: una sola vez
 
-- [Electrones: generar 1,000 eventos y obtener las gráficas](electrons.md).
-- [Alfas: generar resultados para 1, 5 y 10 MeV](alphas.md).
+Completa los pasos 1 a 4 en tu cuenta de YUCA. Cuando la compilación termine
+correctamente, podrás generar nuevas simulaciones sin repetir esta preparación.
 
-## 1. Obtener los archivos
-
-Solo la primera vez:
+### 1. Obtener los archivos
 
 ~~~bash
 git clone https://github.com/castaned/G4-molecularDNA.git
@@ -27,7 +24,7 @@ cd G4-molecularDNA
 
 **Debe ocurrir:** al ejecutar ls aparecen las carpetas env, scripts, config y slurm.
 
-## 2. Cargar las herramientas
+### 2. Cargar las herramientas
 
 ~~~bash
 source env/setup.sh
@@ -35,12 +32,10 @@ source env/setup.sh
 
 **Debe ocurrir:** aparecen las versiones de GCC, CMake, Geant4 y ROOT, sin errores.
 
-Hazlo una vez cada vez que abras una terminal nueva. No necesitas cargar nada más
-por separado.
+**Este paso sí se repite en cada terminal nueva.** El entorno carga todas las
+herramientas necesarias.
 
-## 3. Copiar el ejemplo
-
-Solo la primera vez:
+### 3. Copiar el ejemplo
 
 ~~~bash
 bash scripts/copy_example.sh
@@ -52,7 +47,7 @@ Si dice que las geometrías están pendientes, continúa con el paso 4.
 Si ya tenías una carpeta geometries de otra compilación, consulta
 [cómo reutilizarla](troubleshooting.md#descarga-de-geometrías-agotada).
 
-## 4. Compilar
+### 4. Compilar
 
 Copia este bloque en la misma terminal:
 
@@ -83,7 +78,7 @@ Si aparece FAILED o TIMEOUT, no continúes: abre la
 
 <a id="alfas"></a>
 <a id="combinar"></a>
-## 5. Elegir qué simular
+## Generar resultados
 
 | Quiero… | Seguir esta receta |
 | --- | --- |
@@ -93,7 +88,7 @@ Si aparece FAILED o TIMEOUT, no continúes: abre la
 
 No necesitas recompilar para cambiar entre estas recetas.
 
-## Si vuelves otro día
+## Al iniciar una nueva sesión en YUCA
 
 Desde una terminal nueva de YUCA:
 
