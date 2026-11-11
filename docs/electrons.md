@@ -125,11 +125,11 @@ Las figuras se llaman human_cell_electron.png y human_cell_electron.pdf.
 
 Con **1,000 electrones de 0.662 MeV**, tu figura debe tener estos cuatro paneles:
 
-{% assign reference_image = site.static_files | where: "path", "/assets/images/electrons-1000-reference.png" | first %}
+{% assign reference_image = site.static_files | where: "path", "/assets/images/electrons.png" | first %}
 {% if reference_image %}
-![Referencia de la corrida de 1,000 electrones de 0.662 MeV en human_cell: cuatro paneles de especies y daño]({{ '/assets/images/electrons-1000-reference.png' | relative_url }})
+![Referencia de la corrida de 1,000 electrones de 0.662 MeV en human_cell: cuatro paneles de especies y daño]({{ '/assets/images/electrons.png' | relative_url }})
 *Resultado de referencia obtenido en YUCA. Pulsa la imagen para verla más grande:
-[abrir PNG]({{ '/assets/images/electrons-1000-reference.png' | relative_url }}).*
+[abrir PNG]({{ '/assets/images/electrons.png' | relative_url }}).*
 {% endif %}
 
 | Panel | Qué debes reconocer |
