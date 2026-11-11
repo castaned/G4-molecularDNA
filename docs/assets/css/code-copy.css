@@ -74,3 +74,10 @@ body { background: #f6f9fc; }
  .main-content .dna-art { width:75px; min-width:65px; }
 }
 @media print { .main-content .dna-hero { background:#fff; color:#12364b; } .main-content .dna-hero h2,.main-content .dna-hero p { color:#12364b; } }
+
+/* Compact introduction: prioritize the instructions. */
+.main-content .dna-hero { padding:1rem 1.25rem; margin:1rem 0; gap:1.25rem; }
+.main-content .dna-hero h2 { font-size:1.25rem; margin:.25rem 0 .4rem; }
+.main-content .dna-hero p { font-size:.9rem; }
+.main-content .dna-simulation { display:block; width:160px; height:auto; max-height:140px; object-fit:contain; border-radius:6px; background:#fff; }
+@media(max-width:650px) { .main-content .dna-simulation { width:100px; max-height:100px; } }
