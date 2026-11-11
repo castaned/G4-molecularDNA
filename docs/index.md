@@ -371,6 +371,7 @@ inicial; otros iones requieren configuración GPS y revisión de modelos adicion
 | `geometries/...` no encontrado | Ejecutar mediante el runner que crea el enlace |
 | No existe `molecular` | Revisar salida del trabajo de compilación |
 | `TIMEOUT` o `OUT_OF_MEMORY` | Medir `sacct` y ajustar tiempo/memoria en una nueva campaña |
+| `SLURM_MEM_PER_CPU, SLURM_MEM_PER_GPU, and SLURM_MEM_PER_NODE are mutually exclusive` | El runner limpia las variables CPU/GPU heredadas de Open OnDemand antes de `srun` y conserva la memoria por nodo de la campaña; actualizar el script y preparar una nueva campaña |
 | `QOSMaxSubmitJobPerUserLimit` | Confirmar `--account=p002` y revisar los trabajos pendientes/en ejecución; la QOS limita el total enviado, no solo los simultáneos |
 | Comando Geant4 desconocido | Revisar macro y confirmar versión 11.3.0 |
 | ROOT falla al abrir | Comprobar archivo completo y compatibilidad de ROOT/libstdc++ |
