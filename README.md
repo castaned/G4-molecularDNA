@@ -25,7 +25,8 @@ python3 scripts/campaign.py submit runs/smoke-001 --dry-run
 python3 scripts/campaign.py submit runs/smoke-001
 ```
 
-Si YUCA exige partición/cuenta, ver la guía antes de enviar. Los recursos de ejemplo
+La cuenta Slurm configurada es **`p002`**, tanto para compilar como para las campañas.
+Si YUCA exige una partición específica, ver la guía antes de enviar. Los recursos de ejemplo
 son valores iniciales por medir, no asignaciones verificadas del clúster.
 
 ## Contenido

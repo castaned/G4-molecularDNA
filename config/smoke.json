@@ -13,6 +13,6 @@
     "time": "00:30:00",
     "max_concurrent": 1,
     "partition": "",
-    "account": ""
+    "account": "p002"
   }
 }

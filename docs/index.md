@@ -132,12 +132,14 @@ como respaldo y volver a preparar la copia/geometrías antes de compilar.
 
 ## 4. Compilar con Slurm
 
-Consultar primero las particiones y las políticas de su cuenta:
+La cuenta de proyecto para este entorno de YUCA es **`p002`**. Los scripts Slurm
+la incluyen como `#SBATCH --account=p002` y las campañas usan `"account": "p002"`.
+Consultar primero las particiones y las políticas de esa cuenta:
 
 ```bash
 sinfo
 sbatch slurm/build.slurm
-# Si es necesario: sbatch --partition=PARTICION --account=CUENTA slurm/build.slurm
+# Para indicar también la partición: sbatch --partition=PARTICION --account=p002 slurm/build.slurm
 squeue -u "$USER"
 ```
 
@@ -156,8 +158,9 @@ No ejecutar simulaciones largas en el nodo de acceso.
 
 ## 5. Primera simulación: dos eventos
 
-Antes de preparar, editar `config/smoke.json` si se requiere una partición o cuenta.
-Los campos vacíos usan los valores predeterminados del sitio. Confirmar que esa
+Antes de preparar, editar `config/smoke.json` si se requiere una partición.
+La cuenta ya está fijada a `p002`; no dejarla vacía. La partición vacía usa el
+valor predeterminado del sitio. Confirmar que esa
 partición admite el entorno `zen4` de referencia.
 
 ```bash
@@ -368,11 +371,24 @@ inicial; otros iones requieren configuración GPS y revisión de modelos adicion
 | `geometries/...` no encontrado | Ejecutar mediante el runner que crea el enlace |
 | No existe `molecular` | Revisar salida del trabajo de compilación |
 | `TIMEOUT` o `OUT_OF_MEMORY` | Medir `sacct` y ajustar tiempo/memoria en una nueva campaña |
+| `QOSMaxSubmitJobPerUserLimit` | Confirmar `--account=p002` y revisar los trabajos pendientes/en ejecución; la QOS limita el total enviado, no solo los simultáneos |
 | Comando Geant4 desconocido | Revisar macro y confirmar versión 11.3.0 |
 | ROOT falla al abrir | Comprobar archivo completo y compatibilidad de ROOT/libstdc++ |
 | Tarea ya iniciada | Usar otra carpeta; no borrar la evidencia del intento |
 
 ## 10. Validación pendiente en el clúster
+
+Si Slurm rechaza el envío por límite QOS, consultar:
+
+```bash
+squeue -u "$USER" -o '%.18i %.10a %.12q %.10T %.30R'
+```
+
+Reenviar con `sbatch --account=p002 slurm/build.slurm` si se había usado otra
+cuenta. Si el límite persiste con `p002`, esperar a que terminen trabajos o
+consultar la cuota con YUCA; no cancelar trabajos sin revisar cuáles son.
+En arrays, reducir `%max_concurrent` limita la ejecución simultánea, pero no
+necesariamente el número de tareas contabilizadas como enviadas por la QOS.
 
 Este repositorio incluye pruebas del generador y del envío simulado. La primera
 ejecución en YUCA debe confirmar los specs Spack, partición, datasets, compilación,

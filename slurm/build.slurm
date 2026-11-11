@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=g4dna-build
+#SBATCH --account=p002
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=2
