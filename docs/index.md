@@ -411,27 +411,203 @@ de los 1,000 eventos corresponde a `primary_source`. No interpretar las 640 fila
 como 640 primarios ni concluir a partir de ellas cuántos eventos no tuvieron daño.
 
 <a id="alfas"></a>
-## 11. Alfas y otras configuraciones
+## 11. Alfas: dos eventos por job y análisis separado por energía
 
-`config/alphas.json` contiene alfas a 1, 5 y 10 MeV, diez eventos por tarea y dos
-réplicas: **6 tareas y 60 eventos**. La energía es total por ion, no por nucleón.
-Solicita **12 horas por tarea** debido a un TIMEOUT reportado en una prueba previa.
+Este recorrido reproduce **1, 5 y 10 MeV**, con **2 eventos por tarea y 10 réplicas
+por energía**: 30 tareas, 20 primarios por energía y 60 en total. La energía es
+cinética total del ion, no por nucleón. Todas usan la misma geometría human_cell.
 
-```bash
+### A. Crear una configuración de tareas cortas
+
+Desde la raíz del repositorio, con el entorno cargado:
+
+~~~bash
+python3 - <<'PY'
+import json
+from pathlib import Path
+cfg = json.loads(Path("config/alphas.json").read_text())
+cfg.update(name="alphas-small", particles=["alpha"], energies=[1, 5, 10],
+           unit="MeV", events_per_job=2, replicas=10, seed_base=80001)
+cfg["resources"].update(cpus=1, memory="8G", time="12:00:00",
+                        max_concurrent=2, account="p002")
+Path("config/alphas-small.local.json").write_text(json.dumps(cfg, indent=2) + "\n")
+PY
+~~~
+
+El archivo local queda separado del preset original. No modifica campañas ya
+preparadas. Dos eventos por tarea reducen el trabajo de transporte/química de cada
+job, pero cada uno repite la inicialización de la geometría.
+
+Se solicita **1 CPU por tarea**, hasta **2 tareas simultáneas** y **12 horas por
+tarea**. Confirmar que la partición admite ese límite; no es una garantía de
+finalización. La concurrencia es distinta del número de réplicas.
+
+~~~bash
 sinfo -o '%P %l %a'
-python3 scripts/campaign.py prepare config/alphas.json runs/alphas-001
-python3 scripts/campaign.py submit runs/alphas-001 --dry-run
-python3 scripts/campaign.py submit runs/alphas-001
-```
+cat config/alphas-small.local.json
+~~~
 
-Verificar que la partición admite ese tiempo. Doce horas son un presupuesto inicial,
-no garantía de finalización. Revisar avance y memoria antes de aumentar tiempo
-o repartir eventos. Cada tarea repite la inicialización; no extrapolar tiempos
-de electrones directamente a alfas. Los límites de tiempo/memoria son por tarea.
+### B. Preparar y enviar 30 tareas
 
-`config/scan.json` mezcla partículas y energías: **no fusionar toda esa campaña
-en un solo ROOT**. Agrupar únicamente condiciones idénticas. Comprobar que las
-energías estén dentro del ámbito de los modelos físicos elegidos.
+~~~bash
+python3 scripts/campaign.py prepare config/alphas-small.local.json runs/alphas-small-001 &&
+python3 scripts/campaign.py submit runs/alphas-small-001 --dry-run
+~~~
+
+**Comprobación:** el comando debe incluir --array=0-29%2, --account=p002,
+--cpus-per-task=1 y --time=12:00:00. Después enviar una sola vez:
+
+~~~bash
+python3 scripts/campaign.py submit runs/alphas-small-001
+~~~
+
+Anotar el ID recibido. Enviar otra configuración exige otro directorio y un
+intervalo de semillas independiente; no sobrescribir resultados previos.
+
+### C. Identificar qué tarea corresponde a cada energía
+
+campaign.py recorre partículas, energías y réplicas en ese orden. Para la
+configuración de arriba, el reparto es:
+
+| Energía | Carpetas | Tareas | Primarios al completar el grupo | Semillas del grupo |
+| --- | --- | --- | --- | --- |
+| 1 MeV | task_00000 a task_00009 | 10 | 20 | 80001 a 80020 |
+| 5 MeV | task_00010 a task_00019 | 10 | 20 | 80021 a 80040 |
+| 10 MeV | task_00020 a task_00029 | 10 | 20 | 80041 a 80060 |
+
+Comprobar el reparto real guardado en el manifest:
+
+~~~bash
+python3 - <<'PY'
+import json
+from pathlib import Path
+m = json.loads(Path("runs/alphas-small-001/manifest.json").read_text())
+for t in m["tasks"]:
+    print(f'task_{t["id"]:05d}', t["particle"], t["energy"], t["unit"],
+          "replica", t["replica"], "seeds", t["seeds"])
+PY
+~~~
+
+Si se modifica el orden de las energías o el número de réplicas, también cambia
+el mapa de carpetas. No aplicar los patrones siguientes sin comprobar el manifest.
+
+### D. Esperar al cierre correcto
+
+Sustituir ID_ALPHA por el identificador recibido:
+
+~~~bash
+squeue -r -j ID_ALPHA
+sacct -j ID_ALPHA --format=JobID,Account,State,ExitCode,Elapsed
+~~~
+
+Las tareas principales deben estar COMPLETED / 0:0. JobArrayTaskLimit es normal
+para tareas pendientes cuando ya hay dos ejecutándose. Comprobar también el cierre:
+
+~~~bash
+python3 - <<'PY'
+import json
+from pathlib import Path
+base = Path("runs/alphas-small-001")
+m = json.loads((base / "manifest.json").read_text())
+for t in m["tasks"]:
+    folder = base / f'task_{t["id"]:05d}'
+    state = json.loads((folder / "finished.json").read_text())
+    if state.get("success") is not True:
+        raise SystemExit(f"Tarea incompleta o fallida: {folder}")
+    if not state["root_files"]:
+        raise SystemExit(f"Sin ROOT registrado: {folder}")
+    print(folder.name, t["energy"], t["unit"], "OK")
+print("Todas las tareas tienen cierre correcto.")
+PY
+~~~
+
+No combinar archivos parciales de un TIMEOUT o de una tarea todavía activa.
+Para inspeccionar una sola réplica completa se puede usar:
+
+~~~bash
+python3 scripts/plot_task.py runs/alphas-small-001 0
+~~~
+
+Eso analiza **dos eventos de 1 MeV**, no los veinte del grupo.
+
+### E. Combinar por energía, nunca todas juntas
+
+Estos comandos corresponden exactamente al mapa de 30 tareas anterior. Cada
+patrón selecciona diez carpetas, una energía, y los archivos de workers de ese
+grupo. Con un CPU por tarea se espera un archivo t0 por carpeta.
+
+~~~bash
+hadd -f runs/alphas-small-001/alpha_1MeV.root \
+  runs/alphas-small-001/task_0000*/molecular-dna_t*.root
+
+hadd -f runs/alphas-small-001/alpha_5MeV.root \
+  runs/alphas-small-001/task_0001*/molecular-dna_t*.root
+
+hadd -f runs/alphas-small-001/alpha_10MeV.root \
+  runs/alphas-small-001/task_0002*/molecular-dna_t*.root
+~~~
+
+Cada archivo combinado debe contener **20 primarios**, no 60.
+-f reemplaza un combinado previo con el mismo nombre sin modificar los originales.
+Conservar las réplicas para analizar sus incertidumbres.
+
+### F. Comprobar y graficar cada energía
+
+**1 MeV:**
+
+~~~bash
+root -l -b -q 'analysis/inspect_output.C("runs/alphas-small-001/alpha_1MeV.root",20)' &&
+root -l -b -q 'analysis/human_cell_alphas.C("runs/alphas-small-001/alpha_1MeV.root","runs/alphas-small-001/plots_1MeV")'
+~~~
+
+**5 MeV:**
+
+~~~bash
+root -l -b -q 'analysis/inspect_output.C("runs/alphas-small-001/alpha_5MeV.root",20)' &&
+root -l -b -q 'analysis/human_cell_alphas.C("runs/alphas-small-001/alpha_5MeV.root","runs/alphas-small-001/plots_5MeV")'
+~~~
+
+**10 MeV:**
+
+~~~bash
+root -l -b -q 'analysis/inspect_output.C("runs/alphas-small-001/alpha_10MeV.root",20)' &&
+root -l -b -q 'analysis/human_cell_alphas.C("runs/alphas-small-001/alpha_10MeV.root","runs/alphas-small-001/plots_10MeV")'
+~~~
+
+**Comprobación por grupo:** primary_source debe tener 20 filas, sin errores.
+La macro debe informar partícula alpha, la energía correspondiente y 20 primarios.
+Las filas de damage y classification pueden diferir de 20.
+
+| Energía | Archivo combinado | Carpeta de figuras PNG/PDF |
+| --- | --- | --- |
+| 1 MeV | alpha_1MeV.root | plots_1MeV/ |
+| 5 MeV | alpha_5MeV.root | plots_5MeV/ |
+| 10 MeV | alpha_10MeV.root | plots_10MeV/ |
+
+Todo queda dentro de runs/alphas-small-001/. Cada carpeta contiene
+human_cell_alphas.png y human_cell_alphas.pdf.
+
+**La macro es la misma para las tres energías; cambia el archivo de entrada.**
+human_cell.mac configura la simulación; human_cell_alphas.C genera las gráficas.
+No usar la macro de electrones para estas tareas ni fusionar las tres energías
+en un único archivo para analizarlo como una sola condición.
+
+Este procedimiento genera paneles separados por energía. Una curva conjunta
+de rendimiento SSB/DSB frente a energía requiere un análisis comparativo adicional.
+Las macros actuales muestran valores centrales sin barras de error: no sustituir
+una incertidumbre no determinada por cero.
+
+### G. Si las alfas vuelven a agotar el tiempo
+
+Consultar simulation.log y sacct, además del máximo de la partición. No extrapolar
+los tiempos de electrones a alfas. Si hay que cambiar el tiempo o los eventos,
+editar el JSON y preparar otro directorio, por ejemplo runs/alphas-small-002.
+No cambia la campaña ya enviada. La ejecución completa de esta configuración
+de alfas debe verificarse con sus salidas reales; no se presenta como validada
+solo porque haya funcionado la campaña de electrones.
+
+config/scan.json mezcla partículas y energías: agrupar siempre por condición
+física, usando el manifest, antes de combinar o graficar.
 
 ## 12. Lista final de comprobaciones
 
