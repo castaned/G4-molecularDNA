@@ -121,6 +121,33 @@ G4-molecularDNA/runs/electrons-001/plots_combined/
 
 Las figuras se llaman human_cell_electron.png y human_cell_electron.pdf.
 
+## Referencia: cómo debe verse el ejemplo de 1,000 electrones
+
+Con **1,000 electrones de 0.662 MeV**, tu figura debe tener estos cuatro paneles:
+
+{% assign reference_image = site.static_files | where: "path", "/assets/images/electrons-1000-reference.png" | first %}
+{% if reference_image %}
+![Referencia de la corrida de 1,000 electrones de 0.662 MeV en human_cell: cuatro paneles de especies y daño]({{ '/assets/images/electrons-1000-reference.png' | relative_url }})
+*Resultado de referencia obtenido en YUCA. Pulsa la imagen para verla más grande:
+[abrir PNG]({{ '/assets/images/electrons-1000-reference.png' | relative_url }}).*
+{% endif %}
+
+| Panel | Qué debes reconocer |
+| --- | --- |
+| Arriba izquierda: Species | Varias barras; en esta corrida destacan EaqBaseHits y OHBaseHits |
+| Arriba derecha: Damage Yield | La barra SSB es mayor que las categorías DSB |
+| Abajo izquierda: SSB | En esta corrida, el daño indirecto es el principal; SSB all está cerca de 210 |
+| Abajo derecha: DSB | DSB all está cerca de 8; algunas categorías pueden estar en cero |
+
+**Antes de comparar:** la terminal debe indicar Number of Primaries: 1000 y
+Energy (MeV): 0.662. Los rendimientos de daño se muestran por Gy y Gbp.
+
+**No tiene que salir idéntica píxel por píxel.** Si cambias las semillas, los
+valores pueden variar. Compara los nombres de los paneles, las unidades y el
+orden de magnitud, no solo la altura exacta de una barra. Las figuras actuales
+pueden aparecer sin las pequeñas barras de error de la captura de referencia:
+compara los valores centrales.
+
 **Ya completaste la receta.** Este recorrido funcionó en YUCA:
 [ver el registro de la prueba](validation.md).
 
