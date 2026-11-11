@@ -45,7 +45,9 @@ source env/setup.sh
 ```
 
 Este único comando configura **Spack, GCC 14.2.0, CMake 3.31.5, Geant4 11.3.0
-y ROOT 6.24.08**, además de `CC` y `CXX`. La configuración y la carga están en
+y ROOT 6.24.08**, además de `CC` y `CXX`. CMake, Geant4 y GCC se cargan con
+Spack; ROOT se carga con **`module load root/6.24.08`**, porque está instalado
+como módulo de YUCA y no como paquete Spack. La configuración y la carga están en
 el mismo archivo `env/setup.sh`; no hay que ejecutar los comandos internos aparte
 ni usar otro archivo de configuración. El script muestra las versiones cargadas.
 
@@ -58,7 +60,7 @@ el hash adecuado para el paquete que produce el error:
 
 ```bash
 spack find -lv geant4
-spack find -lv root
+module avail root
 # Sustituir HASH_REAL por el hash que corresponda a la instalación:
 export GEANT4_SPEC='/HASH_REAL'
 source env/setup.sh
@@ -198,8 +200,11 @@ una prueba o recuperarse de un fallo, preparar una nueva carpeta de campaña.
 
 ROOT ya está incluido en el entorno del paso 2; no hay que cargarlo de nuevo.
 En una nueva sesión basta con el mismo `source env/setup.sh`.
-El spec de referencia es `root@6.24.08`; si existen varias instalaciones,
-seleccionar su hash en `ROOT_SPEC` dentro del setup o mediante una variable exportada.
+El módulo confirmado en YUCA es `root/6.24.08`. Si cambia, ajustar `ROOT_MODULE`
+en el setup o exportar esa variable antes de cargarlo. No usar `spack load root`.
+Si un trabajo batch no conoce el comando `module`, el setup intenta inicializarlo
+desde `MODULE_INIT` (por defecto `/etc/profile.d/modules.sh`); ajustar esa ruta
+si la configuración de los nodos usa otra ubicación.
 Escoger una instalación compatible con las bibliotecas C++ de la sesión.
 Geant4 escribe el formato ROOT mediante su propio sistema de análisis; el paquete
 ROOT se necesita aquí para leer y graficar los resultados, no para compilar el ejemplo.

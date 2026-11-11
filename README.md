@@ -32,7 +32,7 @@ son valores iniciales por medir, no asignaciones verificadas del clúster.
 
 | Ruta | Función |
 | --- | --- |
-| `env/setup.sh` | Único archivo de configuración y carga: Spack, GCC, CMake, Geant4 y ROOT |
+| `env/setup.sh` | Único setup: GCC/CMake/Geant4 por Spack; ROOT mediante `module load root/6.24.08` |
 | `scripts/copy_example.sh` | Copia local desde la instalación Geant4, sin descargar |
 | `scripts/local_example.py` | Localización, copia y verificación de fuentes/geometrías |
 | `scripts/build.sh` | Compilación sin interfaz gráfica |
