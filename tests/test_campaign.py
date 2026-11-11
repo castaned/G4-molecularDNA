@@ -3,6 +3,7 @@ import importlib.util
 import json
 from pathlib import Path
 import subprocess
+import sys
 import unittest
 import uuid
 import shutil
@@ -90,6 +91,7 @@ class CampaignTests(unittest.TestCase):
                     args = sbatch.call_args.args[0]
                     self.assertIn("--array=0-11%1", args)
                     self.assertIn("--cpus-per-task=1", args)
+                    self.assertEqual(args[-1], sys.executable)
                     self.assertTrue((destination / "submission.json").exists())
                     with self.assertRaises(ValueError):
                         c.submit(destination, False)

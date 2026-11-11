@@ -370,6 +370,7 @@ inicial; otros iones requieren configuración GPS y revisión de modelos adicion
 | No se encuentran fuentes o geometrías locales | Indicar sus rutas en `copy_example.sh`; no se usa descarga automática |
 | `geometries/...` no encontrado | Ejecutar mediante el runner que crea el enlace |
 | No existe `molecular` | Revisar salida del trabajo de compilación |
+| `execve(): python3: No such file or directory` | El envío pasa ahora la ruta absoluta del intérprete y `srun --export=ALL`; actualizar scripts y preparar otra campaña. Si esa ruta no existe en los nodos, usar Python instalado en una ruta compartida |
 | `TIMEOUT` o `OUT_OF_MEMORY` | Medir `sacct` y ajustar tiempo/memoria en una nueva campaña |
 | `SLURM_MEM_PER_CPU, SLURM_MEM_PER_GPU, and SLURM_MEM_PER_NODE are mutually exclusive` | El runner limpia las variables CPU/GPU heredadas de Open OnDemand antes de `srun` y conserva la memoria por nodo de la campaña; actualizar el script y preparar una nueva campaña |
 | `QOSMaxSubmitJobPerUserLimit` | Confirmar `--account=p002` y revisar los trabajos pendientes/en ejecución; la QOS limita el total enviado, no solo los simultáneos |

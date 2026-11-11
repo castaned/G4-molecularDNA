@@ -150,7 +150,7 @@ def submit(destination, dry_run):
     for key in ("partition", "account"):
         if r.get(key):
             command.append(f"--{key}={r[key]}")
-    command += [str(REPO / "slurm/run_human_cell_array.slurm"), str(REPO), str(destination)]
+    command += [str(REPO / "slurm/run_human_cell_array.slurm"), str(REPO), str(destination), sys.executable]
     print(shlex.join(command))
     if not dry_run:
         if (destination / "submission.json").exists():
