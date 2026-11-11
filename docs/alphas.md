@@ -102,6 +102,47 @@ entre esas energías.
 Si hay un fallo, abre [solución de problemas](troubleshooting.md).
 Cambiar la configuración no modifica los trabajos que ya están enviados.
 
+### Cómo reconocer que ya acabaron los treinta jobs
+
+Sustituye NUMERO por el número de tu campaña:
+
+~~~bash
+sacct -X -j NUMERO --format=JobID%25,State%18,ExitCode
+~~~
+
+**Debe verse:** treinta filas, todas con COMPLETED y 0:0.
+-X oculta los pasos internos para que no los confundas con más jobs.
+
+Para obtener una respuesta corta, copia este bloque cambiando NUMERO:
+
+~~~bash
+sacct -X -j NUMERO --noheader --format=State%30,ExitCode | awk '
+$1 == "COMPLETED" && $2 == "0:0" { n++ }
+END {
+  if (n == 30) print "LISTO PARA COMBINAR: 30/30 jobs completos."
+  else print "TODAVIA NO: " n+0 "/30 jobs completos sin error. Revisa los estados."
+}'
+~~~
+
+| Mensaje | Siguiente paso |
+| --- | --- |
+| TODAVIA NO, con jobs RUNNING o PENDING | Esperar y repetir la comprobación más tarde |
+| TODAVIA NO, con FAILED, TIMEOUT u OUT_OF_MEMORY | Revisar el error; esperar no corregirá un job fallido |
+| LISTO PARA COMBINAR: 30/30 | Continuar con el paso 4 |
+
+**Que la cola quede vacía no demuestra que todo salió bien.**
+También salen de la cola los jobs fallidos. La confirmación es treinta tareas
+COMPLETED con 0:0. La contabilidad puede tardar un poco en actualizarse.
+
+Para ver la cola actualizarse cada treinta segundos:
+
+~~~bash
+watch -n 30 'squeue -r -j NUMERO'
+~~~
+
+Sal con **Ctrl+C**; esto no cancela la simulación. Después utiliza la comprobación
+de finalización anterior antes de combinar los ROOT.
+
 ## 4. Combinar cada energía por separado
 
 **No combines las tres energías en un solo archivo.** Para la configuración
