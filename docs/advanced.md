@@ -630,3 +630,30 @@ física, usando el manifest, antes de combinar o graficar.
 
 [Prueba de 1,000 eventos](validation.md) · [Solución de problemas](troubleshooting.md) · [Fuentes y atribución](references.md) ·
 [Publicación y mantenimiento](publishing.md)
+
+
+<a id="alfas-vs-electrones"></a>
+## Alfas frente a electrones: explicación opcional
+
+En la campaña se generan primarios monoenergéticos: cada tarea tiene una sola
+energía. El array distribuye las réplicas entre 1, 5 y 10 MeV. Tener tres energías
+aumenta el número de tareas, no hace que una tarea transporte tres haces distintos.
+
+Frente a los electrones de 0.662 MeV, las alfas de estas energías tienden a producir
+trazas más cortas y rectas con ionizaciones más concentradas (mayor LET, energía
+depositada por longitud). Se espera mayor tendencia al daño agrupado y complejo;
+no es una garantía de que toda categoría de rendimiento por dosis aumente.
+
+molecularDNA también simula la etapa química. Una traza densa puede elevar su costo
+computacional y consumo de memoria. En la prueba se observó falta de memoria con
+8 GB; todavía no se ha separado el costo de inicialización, transporte y química.
+Atribuir el tiempo exclusivamente al LET sería una hipótesis, no una medición.
+
+No hay una regla universal de tiempo o rendimiento creciente con energía:
+cambian alcance, LET y energía depositada dentro de la región de interés.
+Comparar por dosis, mantener la geometría y parámetros comunes y conservar réplicas.
+
+Fuentes: [modelo químico de molecularDNA](https://geant4-dna.github.io/molecular-docs/docs/overview/chemistry-model.html)
+y [estudio de LET y daño agrupado](https://pmc.ncbi.nlm.nih.gov/articles/PMC10810015/).
+
+[Volver a la receta de alfas](alphas.md#7-qué-observar-frente-a-los-electrones)
