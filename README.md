@@ -40,6 +40,7 @@ son valores iniciales por medir, no asignaciones verificadas del clúster.
 | `scripts/campaign.py` | Generación de macros, semillas, envío y ejecución |
 | `slurm/` | Compilación y array genérico para `human_cell` |
 | `config/smoke.json` | Prueba de dos electrones a 0.662 MeV |
+| `config/electrons.json` | 1,000 electrones: diez tareas de cien eventos y dos simultáneas |
 | `config/scan.json` | Protones y alfas a 1, 5 y 10 MeV; dos réplicas |
 | `config/alphas.json` | Campaña de alfas con límite de 12 horas por tarea |
 | `analysis/human_cell_electron.C` | Gráficas adaptadas de `human_cell.C` |
@@ -48,14 +49,18 @@ son valores iniciales por medir, no asignaciones verificadas del clúster.
 | `scripts/plot_task.py` | Selección de macro y graficación por tarea completa |
 | `analysis/inspect_output.C` | Comprobación estructural de las salidas ROOT |
 | `docs/` | Tutorial en español para GitHub Pages |
+| `docs/troubleshooting.md` | Errores encontrados y soluciones durante las pruebas |
 | `tests/` | Pruebas de generación y envío simulado, sin Geant4 |
 
 ## Estado de validación
 
 La automatización puede probarse sin Geant4 con `python3 -m unittest discover -s tests -v`.
-La compilación, disponibilidad de paquetes Spack, recursos Slurm y simulación real
-**requieren una primera validación en YUCA**. No se presentan resultados físicos
-ni tiempos de ejecución como si ya hubieran sido medidos.
+El 11 de noviembre de 2026 se verificaron en YUCA el setup, compilación, simulación
+Slurm de dos electrones, lectura de los árboles ROOT y generación de PNG/PDF.
+El trabajo de prueba terminó en 1 min 11 s; ese tiempo no se extrapola a otras
+configuraciones. La campaña de 1,000 eventos ya se envió; su finalización, merge
+y normalización deben comprobarse con las salidas reales. La guía distingue
+estas verificaciones de la validación física del modelo y de las incertidumbres.
 
 ## Procedencia
 

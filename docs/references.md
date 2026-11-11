@@ -19,7 +19,9 @@ La versión inicial se basa en las siguientes fuentes primarias:
 - [GitHub Pages: fuente de publicación](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
 
 El setup Spack procede de la configuración de referencia de YUCA.
-La versión de ROOT y los recursos de la cuenta todavía deben confirmarse en YUCA.
+Se confirmó ROOT 6.24/08 mediante el módulo `root/6.24.08`, cuenta Slurm `p002`
+y ejecución de electrones en la partición `cpu` durante las pruebas del 11 de noviembre
+de 2026. Las asignaciones, límites y recursos deben revisarse para cada campaña.
 
 Las fuentes y datos descargados mantienen sus licencias originales. Consultar
 [la licencia Geant4](https://github.com/Geant4/geant4/blob/v11.3.0/LICENSE) y citar

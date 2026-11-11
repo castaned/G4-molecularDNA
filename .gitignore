@@ -1,4 +1,5 @@
 /config/yuca.local.sh
+/config/*.local.json
 /vendor/
 /build/
 /runs/
