@@ -62,12 +62,14 @@ def copy_example(prefix, source=None, geometry=None):
             if candidate.exists():
                 geometry = candidate
                 break
-    if geometry is None or not geometry.exists():
-        raise ValueError("No hay geometrías locales. Indicar la ruta a geometries o geometries.tar.gz como segundo argumento. No se intentará una descarga.")
+    if geometry is not None and not geometry.exists():
+        raise ValueError("La ruta de geometrías indicada no existe")
     build = REPO / "build/molecular"
     geom_dest = build / "geometries"
     build.mkdir(parents=True, exist_ok=True)
-    if geom_dest.exists():
+    if geometry is None:
+        print("Geometrías pendientes: CMake las prepara durante la configuración.")
+    elif geom_dest.exists():
         # No combinar archivos de distintas geometrías silenciosamente.
         if geometry.resolve() != geom_dest.resolve():
             raise ValueError("Ya existe build/molecular/geometries; indicarlo explícitamente para reutilizarlo tras verificar su procedencia.")
@@ -83,22 +85,24 @@ def copy_example(prefix, source=None, geometry=None):
                 if relative.is_absolute() or ".." in relative.parts or not relative.parts or relative.parts[0] != "geometries" or not (member.isfile() or member.isdir()):
                     raise ValueError("Archivo local de geometrías con rutas o tipos no permitidos")
             archive.extractall(build, members=members)
-    check_geometry(geom_dest)
+    if geometry is not None:
+        check_geometry(geom_dest)
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(source, target)
     data = dict(source_kind="local-geant4-installation", source_path=str(source),
-                geant4_prefix=str(prefix.resolve()), geometry_source=str(geometry),
+                geant4_prefix=str(prefix.resolve()), geometry_source=str(geometry) if geometry else None,
                 files_sha256=inventory(target))
     metadata.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8")
     print(f"Ejemplo copiado: {target}\nGeometrías: {geom_dest}\nNo se realizaron descargas.")
 
 
-def verify():
+def verify(sources_only=False):
     metadata = json.loads((REPO / "vendor/source.json").read_text(encoding="utf-8"))
     if inventory(REPO / "vendor/moleculardna") != metadata["files_sha256"]:
         raise ValueError("Las fuentes copiadas cambiaron; registrar una nueva copia antes de compilar")
-    check_geometry(REPO / "build/molecular/geometries")
-    print("Copia local y geometrías verificadas")
+    if not sources_only:
+        check_geometry(REPO / "build/molecular/geometries")
+    print("Copia local verificada" if sources_only else "Copia local y geometrías verificadas")
 
 
 def main():
@@ -108,13 +112,14 @@ def main():
     p.add_argument("--prefix", required=True, type=Path)
     p.add_argument("--source", type=Path)
     p.add_argument("--geometry", type=Path)
-    sub.add_parser("verify")
+    p = sub.add_parser("verify")
+    p.add_argument("--sources-only", action="store_true")
     args = parser.parse_args()
     try:
         if args.action == "copy":
             copy_example(args.prefix, args.source, args.geometry)
         else:
-            verify()
+            verify(args.sources_only)
     except (ValueError, OSError, KeyError, tarfile.TarError) as error:
         parser.exit(1, f"ERROR: {error}\n")
 

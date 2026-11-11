@@ -40,11 +40,14 @@ class LocalExampleTests(unittest.TestCase):
         self.assertIn("human_cell.mac", record["files_sha256"])
         self.assertNotIn("geometries/cube-centred-X-8.txt", record["files_sha256"])
 
-    def test_refuse_missing_geometries_without_download(self):
+    def test_allow_copy_before_cmake_prepares_geometries(self):
         shutil.rmtree(self.source / "geometries")
-        with patch.object(m, "REPO", self.repo), self.assertRaisesRegex(ValueError, "No hay geometrías locales"):
+        with patch.object(m, "REPO", self.repo):
             m.copy_example(self.prefix)
-        self.assertFalse((self.repo / "vendor/moleculardna").exists())
+            m.verify(sources_only=True)
+            with self.assertRaisesRegex(ValueError, "Faltan geometrías"):
+                m.verify()
+        self.assertTrue((self.repo / "vendor/moleculardna").exists())
 
     def test_refuse_overwrite_and_detect_changed_sources(self):
         with patch.object(m, "REPO", self.repo):

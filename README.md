@@ -10,8 +10,8 @@ como página con GitHub Pages desde `main /docs`.
 
 1. Clonar este repositorio en YUCA.
 2. Cargar Spack, GCC, CMake, Geant4 y ROOT con `source env/setup.sh`.
-3. Copiar molecularDNA y su geometría desde la instalación local de Geant4.
-4. Compilar el ejecutable `molecular` mediante Slurm.
+3. Copiar molecularDNA desde la instalación local de Geant4.
+4. Configurar y compilar `molecular` mediante Slurm; CMake prepara las geometrías.
 5. Preparar `smoke.json`: una tarea de dos eventos, sin visualización.
 6. Validar los archivos ROOT, graficar con las macros del ejemplo y configurar campañas.
 

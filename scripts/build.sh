@@ -5,8 +5,8 @@ source "$repo/env/setup.sh"
 src="$repo/vendor/moleculardna"
 build="$repo/build/molecular"
 test -f "$src/CMakeLists.txt" || { echo 'Ejecutar primero bash scripts/copy_example.sh' >&2; exit 1; }
-python3 "$repo/scripts/local_example.py" verify
-test -s "$build/geometries/cube-centred-X-8.txt"
+python3 "$repo/scripts/local_example.py" verify --sources-only
+mkdir -p "$build"
 cd "$build"
 # El CMake oficial comprueba geometries respecto al directorio de trabajo.
 cmake -S "$src" -B "$build" -DWITH_GEANT4_UIVIS=OFF -DCMAKE_BUILD_TYPE=Release \

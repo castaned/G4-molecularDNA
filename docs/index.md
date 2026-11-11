@@ -113,11 +113,15 @@ bash scripts/copy_example.sh /ruta/moleculardna /ruta/geometries
 bash scripts/copy_example.sh /ruta/moleculardna /ruta/geometries.tar.gz
 ```
 
-Si faltan geometrías, el script se detiene con un mensaje; no intenta descargarlas.
-Indicar la ruta usada por una ejecución funcional o consultar la ubicación compartida
-con YUCA. Antes de compilar se comprueban los cuatro archivos que requiere `human_cell`;
-así el CMake oficial encuentra las geometrías preparadas y no entra en su descarga
-automática. La copia existente nunca se sobrescribe silenciosamente.
+No es necesario tener las geometrías antes de copiar el ejemplo. Si todavía no
+existen, el CMake oficial prepara `geometries/` durante la configuración.
+Los cuatro archivos de `human_cell` se comprueban después de CMake.
+
+En Geant4 11.3.0, CMake intenta descargar y descomprimir el dataset si no encuentra
+las geometrías. Las fuentes de molecularDNA, en cambio, se copian de la instalación
+local. Si el nodo no puede acceder al dataset, reutilizar `geometries/` de una
+compilación funcional mediante el segundo argumento del script. La copia existente
+nunca se sobrescribe silenciosamente.
 
 Para migrar desde una versión previa de esta guía que usaba un checkout en
 `vendor/geant4`, conservarlo como referencia; ya no se usa para nuevas compilaciones.
