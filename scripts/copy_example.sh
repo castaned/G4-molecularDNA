@@ -2,7 +2,7 @@
 # Copiar desde Geant4 instalado; no realiza conexiones de red.
 set -euo pipefail
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-source "$repo/env/setup.sh" simulation
+source "$repo/env/setup.sh"
 prefix="$(spack location -i "$GEANT4_SPEC")"
 args=(--prefix "$prefix")
 if [[ -n "${1:-}" ]]; then args+=(--source "$1"); fi

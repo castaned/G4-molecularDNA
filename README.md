@@ -9,7 +9,7 @@ como página con GitHub Pages desde `main /docs`.
 ## Flujo
 
 1. Clonar este repositorio en YUCA.
-2. Cargar Spack, GCC y Geant4 con `source env/setup.sh`.
+2. Cargar Spack, GCC, CMake, Geant4 y ROOT con `source env/setup.sh`.
 3. Copiar molecularDNA y su geometría desde la instalación local de Geant4.
 4. Compilar el ejecutable `molecular` mediante Slurm.
 5. Preparar `smoke.json`: una tarea de dos eventos, sin visualización.
@@ -32,8 +32,7 @@ son valores iniciales por medir, no asignaciones verificadas del clúster.
 
 | Ruta | Función |
 | --- | --- |
-| `config/yuca.sh` | Setup de referencia de YUCA |
-| `env/setup.sh` | Entorno C/C++, CMake, Geant4 y opcionalmente ROOT |
+| `env/setup.sh` | Único archivo de configuración y carga: Spack, GCC, CMake, Geant4 y ROOT |
 | `scripts/copy_example.sh` | Copia local desde la instalación Geant4, sin descargar |
 | `scripts/local_example.py` | Localización, copia y verificación de fuentes/geometrías |
 | `scripts/build.sh` | Compilación sin interfaz gráfica |

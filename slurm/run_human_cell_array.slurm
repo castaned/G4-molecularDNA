@@ -3,7 +3,7 @@
 set -euo pipefail
 repo="$1"
 campaign="$2"
-source "$repo/env/setup.sh" simulation
+source "$repo/env/setup.sh"
 export OMP_NUM_THREADS=1
 export OPENBLAS_NUM_THREADS=1
 srun --ntasks=1 --cpus-per-task="$SLURM_CPUS_PER_TASK" \

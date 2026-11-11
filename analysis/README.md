@@ -13,7 +13,7 @@ SSB por origen y DSB por origen. No son un análisis independiente del ejemplo.
 ## Uso recomendado desde la raíz del repositorio
 
 ```bash
-source env/setup.sh analysis
+source env/setup.sh
 python3 scripts/plot_task.py runs/smoke-001 0
 python3 scripts/plot_task.py runs/alphas-001 0
 ```

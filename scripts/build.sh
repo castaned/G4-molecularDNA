@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-source "$repo/env/setup.sh" simulation
+source "$repo/env/setup.sh"
 src="$repo/vendor/moleculardna"
 build="$repo/build/molecular"
 test -f "$src/CMakeLists.txt" || { echo 'Ejecutar primero bash scripts/copy_example.sh' >&2; exit 1; }

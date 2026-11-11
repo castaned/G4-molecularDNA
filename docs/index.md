@@ -42,37 +42,37 @@ herramienta, consultar los módulos de YUCA. No instalar paquetes con sudo.
 
 ```bash
 source env/setup.sh
-spack --version
-spack find -lv geant4
-spack find -lv gcc
-spack find -lv cmake
 ```
 
-`config/yuca.sh` contiene los specs del entorno de referencia de YUCA:
-
-```bash
-source /shared/spack/share/spack/setup-env.sh
-spack load 'cmake@3.31.5%aocc@5.0.0 arch=linux-almalinux9-zen4'
-spack load 'geant4@11.3.0%gcc@14.2.0'
-spack load 'gcc@14.2.0'
-export CC="$(command -v gcc)"
-export CXX="$(command -v g++)"
-```
+Este único comando configura **Spack, GCC 14.2.0, CMake 3.31.5, Geant4 11.3.0
+y ROOT 6.24.08**, además de `CC` y `CXX`. La configuración y la carga están en
+el mismo archivo `env/setup.sh`; no hay que ejecutar los comandos internos aparte
+ni usar otro archivo de configuración. El script muestra las versiones cargadas.
 
 El compilador usado para construir CMake puede ser AOCC; la aplicación se compila
 con GCC, como la instalación de Geant4 indicada. El spec `zen4` requiere nodos
 compatibles: confirmar la partición o restricción apropiada con YUCA.
 
-Si Spack encuentra varias coincidencias, escoger el hash de la instalación correcta:
+Solo si Spack encuentra varias coincidencias, consultar las instalaciones y elegir
+el hash adecuado para el paquete que produce el error:
 
 ```bash
-cp config/yuca.sh config/yuca.local.sh
-# Editar yuca.local.sh: por ejemplo GEANT4_SPEC='/HASH_REAL'
+spack find -lv geant4
+spack find -lv root
+# Sustituir HASH_REAL por el hash que corresponda a la instalación:
+export GEANT4_SPEC='/HASH_REAL'
 source env/setup.sh
 ```
 
-El archivo local se excluye de Git. Cada nueva sesión y cada trabajo deben cargar
-el entorno; los scripts Slurm incluidos ya lo hacen. Usar una sesión limpia si
+Se pueden ajustar los valores predeterminados directamente en `env/setup.sh`;
+las variables exportadas tienen prioridad. Si se utilizaba `config/yuca.local.sh`
+en una versión anterior, trasladar sus specs personalizados al setup o a las
+variables exportadas: ese archivo ya no se utiliza.
+
+Se carga el entorno **una vez por sesión**. Repetir `source` en el mismo shell con
+los mismos specs no vuelve a cargar los paquetes. Cada trabajo Slurm inicia otro
+proceso y carga el mismo archivo para establecer su propio entorno; no requiere
+ningún paso manual adicional. Usar una sesión limpia si
 se habían cargado otras versiones. No se descargan bases de datos físicas durante
 los trabajos: deben estar disponibles con la instalación Geant4 de YUCA.
 
@@ -194,18 +194,12 @@ No modificar ni borrar `build/molecular/geometries` mientras haya campañas pend
 Los archivos `started.json` impiden sobrescribir una tarea ya iniciada; para repetir
 una prueba o recuperarse de un fallo, preparar una nueva carpeta de campaña.
 
-## 7. Cargar ROOT y abrir los árboles
+## 7. Abrir los árboles con ROOT
 
-```bash
-source env/setup.sh
-spack find -lv root
-cp -n config/yuca.sh config/yuca.local.sh
-# Editar ROOT_SPEC en config/yuca.local.sh con el spec/hash instalado.
-source env/setup.sh analysis
-root-config --version
-```
-
-No se fija una versión ROOT porque el setup proporcionado no la incluye.
+ROOT ya está incluido en el entorno del paso 2; no hay que cargarlo de nuevo.
+En una nueva sesión basta con el mismo `source env/setup.sh`.
+El spec de referencia es `root@6.24.08`; si existen varias instalaciones,
+seleccionar su hash en `ROOT_SPEC` dentro del setup o mediante una variable exportada.
 Escoger una instalación compatible con las bibliotecas C++ de la sesión.
 Geant4 escribe el formato ROOT mediante su propio sistema de análisis; el paquete
 ROOT se necesita aquí para leer y graficar los resultados, no para compilar el ejemplo.
@@ -253,7 +247,7 @@ El análisis utiliza adaptaciones de los scripts oficiales del mismo ejemplo:
 | Protones | `analysis/human_cell_proton.C` | `human_cell.C` |
 
 ```bash
-source env/setup.sh analysis
+# Si es una sesión nueva, cargar antes source env/setup.sh.
 python3 scripts/plot_task.py runs/smoke-001 0
 # Para una tarea alfa terminada:
 python3 scripts/plot_task.py runs/alphas-001 0
@@ -358,7 +352,7 @@ inicial; otros iones requieren configuración GPS y revisión de modelos adicion
 
 | Mensaje o síntoma | Acción |
 | --- | --- |
-| Spack encuentra varios paquetes | Fijar un hash de instalación en `yuca.local.sh` |
+| Spack encuentra varios paquetes | Ajustar el spec/hash en `env/setup.sh` o exportar la variable correspondiente |
 | `Illegal instruction` | Verificar CPU del nodo y spec `zen4` con YUCA |
 | Falta dataset Geant4 | Revisar instalación y variables de datos del entorno |
 | No se encuentran fuentes o geometrías locales | Indicar sus rutas en `copy_example.sh`; no se usa descarga automática |
