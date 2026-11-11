@@ -401,8 +401,14 @@ root -l -b -q 'analysis/human_cell_electron.C("runs/electrons-001/electrons_1000
 
 **Comprobación:** `tuples/primary_source: 1000 filas`, sin errores.
 Las figuras quedan en `runs/electrons-001/plots_combined/`.
-Esta combinación aún debe comprobarse con la salida final de la campaña real;
-la lectura y graficación de dos eventos sí fueron observadas.
+**Comprobado en YUCA el 11 de noviembre de 2026:** la campaña `2240071`
+se combinó y el archivo resultante contiene los 1,000 primarios solicitados.
+También se generaron los PNG/PDF. Ver [el registro de la prueba y sus resultados](validation.md).
+
+En esa prueba, `classification` y `source` contienen 640 filas y `damage` contiene
+2,852 registros. No todos los árboles tienen una fila por primario; la comprobación
+de los 1,000 eventos corresponde a `primary_source`. No interpretar las 640 filas
+como 640 primarios ni concluir a partir de ellas cuántos eventos no tuvieron daño.
 
 <a id="alfas"></a>
 ## 11. Alfas y otras configuraciones
@@ -442,5 +448,5 @@ energías estén dentro del ámbito de los modelos físicos elegidos.
 | Merge | Misma condición física y todos los workers pertinentes |
 | Gráficas | PNG/PDF creados y normalización revisada |
 
-[Solución de problemas](troubleshooting.md) · [Fuentes y atribución](references.md) ·
+[Prueba de 1,000 eventos](validation.md) · [Solución de problemas](troubleshooting.md) · [Fuentes y atribución](references.md) ·
 [Publicación y mantenimiento](publishing.md)

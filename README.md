@@ -58,9 +58,10 @@ La automatización puede probarse sin Geant4 con `python3 -m unittest discover -
 El 11 de noviembre de 2026 se verificaron en YUCA el setup, compilación, simulación
 Slurm de dos electrones, lectura de los árboles ROOT y generación de PNG/PDF.
 El trabajo de prueba terminó en 1 min 11 s; ese tiempo no se extrapola a otras
-configuraciones. La campaña de 1,000 eventos ya se envió; su finalización, merge
-y normalización deben comprobarse con las salidas reales. La guía distingue
-estas verificaciones de la validación física del modelo y de las incertidumbres.
+configuraciones. La campaña de 1,000 electrones se completó, se fusionó y se
+comprobó el total de primarios; también se generaron las figuras PNG/PDF.
+Ver [registro de resultados](docs/validation.md). Estas comprobaciones del flujo
+no sustituyen la validación física del modelo, de la normalización ni de las incertidumbres.
 
 ## Procedencia
 
