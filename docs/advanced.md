@@ -125,7 +125,7 @@ descarga una vez por job. No modificarla con campañas activas.
 ## 4. Compilar con Slurm
 
 ```bash
-sbatch --account=p002 slurm/build.slurm
+sbatch --account=p067 slurm/build.slurm
 ```
 
 **Comprobación:** aparece `Submitted batch job ID_BUILD`. Sustituir `ID_BUILD`
@@ -160,7 +160,7 @@ python3 scripts/campaign.py prepare config/smoke.json runs/smoke-001
 python3 scripts/campaign.py submit runs/smoke-001 --dry-run
 ```
 
-**Comprobación:** el comando debe incluir `--account=p002`, `--array=0-0%1`,
+**Comprobación:** el comando debe incluir `--account=p067`, `--array=0-0%1`,
 `--cpus-per-task=1`, `--mem=8G` y `--time=00:30:00`. También pasa la ruta absoluta
 de Python, que debe estar disponible en los nodos de cómputo.
 
@@ -272,7 +272,7 @@ nano config/electrons.json
 | `resources.memory` | `8G` | Memoria por tarea/nodo único |
 | `resources.time` | `04:00:00` | Límite, no tiempo estimado |
 | `resources.max_concurrent` | 2 | Hasta dos tareas simultáneas |
-| `resources.account` | `p002` | Cuenta de proyecto |
+| `resources.account` | `p067` | Cuenta de proyecto |
 
 Total: partículas × energías × réplicas × eventos por tarea =
 **1 × 1 × 10 × 100 = 1,000 primarios**, si todas completan.
@@ -286,7 +286,7 @@ python3 scripts/campaign.py prepare config/electrons.json runs/electrons-001 &&
 python3 scripts/campaign.py submit runs/electrons-001 --dry-run
 ```
 
-**Comprobación:** `--array=0-9%2` y `--account=p002`. Después:
+**Comprobación:** `--array=0-9%2` y `--account=p067`. Después:
 
 ```bash
 python3 scripts/campaign.py submit runs/electrons-001
@@ -433,7 +433,7 @@ cfg = json.loads(Path("config/alphas.json").read_text())
 cfg.update(name="alphas-small", particles=["alpha"], energies=[1, 5, 10],
            unit="MeV", events_per_job=2, replicas=10, seed_base=80001)
 cfg["resources"].update(cpus=1, memory="8G", time="12:00:00",
-                        max_concurrent=2, account="p002")
+                        max_concurrent=2, account="p067")
 Path("config/alphas-small.local.json").write_text(json.dumps(cfg, indent=2) + "\n")
 PY
 ~~~
@@ -458,7 +458,7 @@ python3 scripts/campaign.py prepare config/alphas-small.local.json runs/alphas-s
 python3 scripts/campaign.py submit runs/alphas-small-001 --dry-run
 ~~~
 
-**Comprobación:** el comando debe incluir --array=0-29%2, --account=p002,
+**Comprobación:** el comando debe incluir --array=0-29%2, --account=p067,
 --cpus-per-task=1 y --time=12:00:00. Después enviar una sola vez:
 
 ~~~bash
@@ -622,7 +622,7 @@ física, usando el manifest, antes de combinar o graficar.
 | Geometría | Archivos verificados después de CMake |
 | Build | `COMPLETED / 0:0` y ejecutable |
 | Preparación | Manifest creado; eventos y semillas revisados |
-| Envío | Cuenta p002, array y recursos correctos |
+| Envío | Cuenta p067, array y recursos correctos |
 | Finalización | Tareas completas, `success: true` |
 | ROOT | Primarios leídos iguales a los solicitados |
 | Merge | Misma condición física y todos los workers pertinentes |

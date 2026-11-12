@@ -1,7 +1,14 @@
 {
   "name": "scan",
-  "particles": ["proton", "alpha"],
-  "energies": [1, 5, 10],
+  "particles": [
+    "proton",
+    "alpha"
+  ],
+  "energies": [
+    1,
+    5,
+    10
+  ],
   "unit": "MeV",
   "events_per_job": 10,
   "replicas": 2,
@@ -13,6 +20,6 @@
     "time": "12:00:00",
     "max_concurrent": 2,
     "partition": "",
-    "account": "p002"
+    "account": "p067"
   }
 }

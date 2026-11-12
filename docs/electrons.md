@@ -14,6 +14,10 @@ cd ~/G4-molecularDNA
 source env/setup.sh
 ~~~
 
+**Proyecto Slurm:** comprueba que `resources.account` en `config/smoke.json` y
+`config/electrons.json` tenga tu proyecto (por ejemplo, `p067`). Cámbialo antes
+de preparar la campaña. El dry-run debe mostrar ese mismo proyecto.
+
 **Usa una carpeta nueva para cada intento.** Si ya existe el nombre indicado,
 cámbialo en todos los comandos de ese recorrido; por ejemplo, usa electrons-002.
 
@@ -55,7 +59,7 @@ python3 scripts/campaign.py prepare config/electrons.json runs/electrons-001 &&
 python3 scripts/campaign.py submit runs/electrons-001 --dry-run
 ~~~
 
-**Comprueba:** aparecen --array=0-9%2 y --account=p002.
+**Comprueba:** aparecen --array=0-9%2 y --account=p067.
 
 Ahora envía:
 

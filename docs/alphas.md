@@ -19,6 +19,9 @@ source env/setup.sh
 
 ## 1. Crear la configuración
 
+En el bloque siguiente, cambia `account="p067"` si tu proyecto es otro.
+No necesitas editar el script Slurm.
+
 Copia el bloque completo, desde python3 hasta la última línea PY:
 
 ~~~bash
@@ -29,7 +32,7 @@ cfg = json.loads(Path("config/alphas.json").read_text())
 cfg.update(name="alphas-small", particles=["alpha"], energies=[1, 5, 10],
            unit="MeV", events_per_job=2, replicas=10, seed_base=80001)
 cfg["resources"].update(cpus=1, memory="32G", time="12:00:00",
-                        max_concurrent=1, account="p002")
+                        max_concurrent=1, account="p067")
 Path("config/alphas-small.local.json").write_text(json.dumps(cfg, indent=2) + "\n")
 PY
 ~~~
@@ -47,7 +50,7 @@ python3 scripts/campaign.py prepare config/alphas-small.local.json runs/alphas-s
 python3 scripts/campaign.py submit runs/alphas-small-001 --dry-run
 ~~~
 
-**Comprueba:** aparecen --array=0-29%1, --mem=32G y --account=p002.
+**Comprueba:** aparecen --array=0-29%1, --mem=32G y --account=p067.
 
 ~~~bash
 python3 scripts/campaign.py submit runs/alphas-small-001

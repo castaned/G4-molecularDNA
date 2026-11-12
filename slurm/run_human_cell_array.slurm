@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#SBATCH --account=p002
+# La cuenta se toma de resources.account en la configuración de la campaña.
 # Los recursos y el array se definen en scripts/campaign.py submit.
 set -euo pipefail
 repo="$1"

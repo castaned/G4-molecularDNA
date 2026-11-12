@@ -65,10 +65,12 @@ Si ya tenías una carpeta geometries de otra compilación, consulta
 
 ### 4. Compilar
 
-Copia este bloque en la misma terminal:
+Indica tu proyecto Slurm en PROJECT. En este ejemplo es **p067**; si tienes otro,
+cambia únicamente ese valor:
 
 ~~~bash
-BUILD_JOB=$(sbatch --parsable --account=p002 slurm/build.slurm)
+PROJECT=p067
+BUILD_JOB=$(sbatch --parsable --account="$PROJECT" slurm/build.slurm)
 echo "Número del trabajo: $BUILD_JOB"
 ~~~
 
@@ -95,6 +97,20 @@ Si aparece FAILED o TIMEOUT, no continúes: abre la
 <a id="alfas"></a>
 <a id="combinar"></a>
 ## Generar resultados
+
+**Antes de preparar una campaña:** abre su archivo en `config/` y comprueba
+`resources.account`. Los ejemplos incluyen `"account": "p067"`; cámbialo por
+el proyecto asignado a tu cuenta. No es tu nombre de usuario de YUCA.
+
+~~~json
+"account": "p067"
+~~~
+
+La compilación usa PROJECT; las simulaciones usan resources.account del JSON.
+En ambos debes indicar tu proyecto. No necesitas editar los archivos Slurm.
+Si una campaña ya estaba preparada, crea otra carpeta con la configuración
+actualizada; modificar el JSON no cambia campañas preparadas o enviadas.
+
 
 | Quiero… | Seguir esta receta |
 | --- | --- |

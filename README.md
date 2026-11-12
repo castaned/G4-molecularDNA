@@ -25,7 +25,11 @@ python3 scripts/campaign.py submit runs/smoke-001 --dry-run
 python3 scripts/campaign.py submit runs/smoke-001
 ```
 
-La cuenta Slurm configurada es **`p002`**, tanto para compilar como para las campañas.
+El proyecto Slurm es configurable: los ejemplos usan **`p067`** en
+`resources.account` de los archivos `config/*.json`. Sustitúyelo por el proyecto
+asignado antes de preparar cada campaña. Para compilar, indica el mismo proyecto
+con `sbatch --account=p067 slurm/build.slurm`. Los scripts Slurm no fijan una cuenta.
+Las campañas ya preparadas conservan su configuración original.
 Si YUCA exige una partición específica, ver la guía antes de enviar. Los recursos de ejemplo
 son valores iniciales por medir, no asignaciones verificadas del clúster.
 

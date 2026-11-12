@@ -1,7 +1,11 @@
 {
   "name": "electrons",
-  "particles": ["e-"],
-  "energies": [0.662],
+  "particles": [
+    "e-"
+  ],
+  "energies": [
+    0.662
+  ],
   "unit": "MeV",
   "events_per_job": 100,
   "replicas": 10,
@@ -13,6 +17,6 @@
     "time": "04:00:00",
     "max_concurrent": 2,
     "partition": "",
-    "account": "p002"
+    "account": "p067"
   }
 }

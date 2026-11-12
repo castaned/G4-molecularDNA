@@ -1,7 +1,11 @@
 {
   "name": "smoke",
-  "particles": ["e-"],
-  "energies": [0.662],
+  "particles": [
+    "e-"
+  ],
+  "energies": [
+    0.662
+  ],
   "unit": "MeV",
   "events_per_job": 2,
   "replicas": 1,
@@ -13,6 +17,6 @@
     "time": "00:30:00",
     "max_concurrent": 1,
     "partition": "",
-    "account": "p002"
+    "account": "p067"
   }
 }

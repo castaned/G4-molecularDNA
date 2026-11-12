@@ -49,7 +49,7 @@ La solución usada en YUCA fue copiar `geometries/` de otra compilación funcion
 # Usar este comando solo si build/molecular/geometries todavía no existe.
 cp -a /ruta/compilacion-anterior/geometries build/molecular/
 python3 scripts/local_example.py verify
-sbatch --account=p002 slurm/build.slurm
+sbatch --account=p067 slurm/build.slurm
 ```
 
 No extraer un archivo dañado ni combinar una carpeta parcial con otra sin revisar
@@ -61,11 +61,12 @@ Con `geometries/` completa en el directorio de compilación, CMake omite la desc
 **Síntoma:** `QOSMaxSubmitJobPerUserLimit` o rechazo por política de contabilidad.
 
 ```bash
-sbatch --account=p002 slurm/build.slurm
+sbatch --account=p067 slurm/build.slurm
 squeue -u "$USER" -o '%.18i %.10a %.12q %.10T %.30R'
 ```
 
-La cuenta confirmada es `p002`. En las pruebas, el envío de compilación fue
+Las pruebas originales usaron `p002`. Los ejemplos actuales usan `p067`;
+indica siempre el proyecto asignado a tu cuenta. En las pruebas, el envío de compilación fue
 aceptado al indicarla explícitamente. El escritorio Open OnDemand también aparece
 como trabajo: no cancelarlo para intentar corregir un envío sin revisar antes.
 Si el rechazo persiste con la cuenta correcta, consultar los límites con YUCA.
