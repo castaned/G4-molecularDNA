@@ -18,7 +18,7 @@ como página con GitHub Pages desde `main /docs`.
 ```bash
 source env/setup.sh
 bash scripts/copy_example.sh
-sbatch slurm/build.slurm
+sbatch --account=p067 slurm/build.slurm
 # Esperar a que termine la compilación sin errores.
 python3 scripts/campaign.py prepare config/smoke.json runs/smoke-001
 python3 scripts/campaign.py submit runs/smoke-001 --dry-run
@@ -77,3 +77,10 @@ con atribución y licencia en `analysis/`, basadas en Geant4 `v11.3.0`.
 La geometría, química y fuente espacial de `human_cell.mac` se conservan.
 Solo se parametrizan partícula, energía, eventos, semillas y archivo de salida.
 Consultar [fuentes y atribución](docs/references.md) y [publicación](docs/publishing.md).
+
+## Protones
+
+Sigue la [receta de protones](docs/protons.md): primero un evento a 10 MeV con
+config/protons-smoke.json; después cien con config/protons.json. El proyecto
+Slurm se define en resources.account (ejemplo p067). Estas configuraciones
+aún requieren validación de tiempo, memoria y resultados en YUCA.

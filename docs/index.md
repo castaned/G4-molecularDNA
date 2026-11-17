@@ -18,6 +18,7 @@ title: molecularDNA en YUCA
 <a class="recipe-card" href="#preparacion-inicial"><div class="recipe-step">01 · PREPARAR</div><strong>Preparación inicial</strong><span>Obtén los archivos y compila el ejemplo una sola vez.</span></a>
 <a class="recipe-card" href="{{ '/electrons.html' | relative_url }}"><div class="recipe-step">02 · ELECTRONES</div><strong>Tu primera campaña</strong><span>Genera 1,000 eventos, combina las salidas y obtén las gráficas.</span></a>
 <a class="recipe-card" href="{{ '/alphas.html' | relative_url }}"><div class="recipe-step">03 · ALFAS</div><strong>Explora varias energías</strong><span>Simula 1, 5 y 10 MeV y revisa los resultados por energía.</span></a>
+<a class="recipe-card" href="{{ '/protons.html' | relative_url }}"><div class="recipe-step">04 · PROTONES</div><strong>Simular protones</strong><span>Prueba un evento y genera una campaña de cien protones a 10 MeV.</span></a>
 </div>
 
 Esta guía utiliza el clúster **YUCA** para simular el daño en el ADN con
@@ -116,6 +117,7 @@ actualizada; modificar el JSON no cambia campañas preparadas o enviadas.
 | --- | --- |
 | Probar con dos eventos antes de una campaña | [Prueba rápida](electrons.md#prueba) |
 | Simular 1,000 electrones y graficarlos | [Electrones](electrons.md#campana) |
+| Probar y simular cien protones a 10 MeV | [Protones](protons.md) |
 | Simular alfas de varias energías con dos eventos por job | [Alfas](alphas.md) |
 
 No necesitas recompilar para cambiar entre estas recetas.

@@ -59,7 +59,7 @@ body { background: #f6f9fc; }
 .main-content .dna-hero p { margin:0; color:#e0eff3; }
 .main-content .dna-label { font-size:0.75rem; font-weight:700; letter-spacing:0.12em; color:#80e6d4; }
 .main-content .dna-art { width:115px; min-width:85px; height:180px; }
-.main-content .recipe-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1rem; margin:1.5rem 0 2rem; }
+.main-content .recipe-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1rem; margin:1.5rem 0 2rem; }
 .main-content .recipe-card { display:block; padding:1.2rem; border:1px solid #dbe7ed; border-top:4px solid #178777; border-radius:12px; color:#264657; background:#f8fbfd; text-decoration:none; }
 .main-content .recipe-card:hover { background:#edf7f6; border-color:#178777; }
 .main-content .recipe-card:focus-visible { outline:3px solid #155799; outline-offset:3px; }
