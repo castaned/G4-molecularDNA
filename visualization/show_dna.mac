@@ -7,9 +7,10 @@
 /vis/geometry/set/visibility straight 0 true
 /vis/viewer/set/background black
 /vis/viewer/set/style wireframe
-/vis/viewer/set/viewpointThetaPhi 60 120
+/vis/viewer/set/viewpointThetaPhi 70 120
+/vis/viewer/set/upVector 1 0 0
 /vis/viewer/panTo 0 0 nm
-/vis/viewer/zoomTo 10
+/vis/viewer/zoomTo 18
 /vis/viewer/set/autoRefresh true
 /vis/viewer/rebuild
 /vis/viewer/flush
