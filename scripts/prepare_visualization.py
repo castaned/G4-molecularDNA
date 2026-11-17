@@ -1,10 +1,58 @@
 #!/usr/bin/env python3
 """Preparar una copia de molecularDNA 11.3 para visualizar, sin tocar vendor."""
 from pathlib import Path
+import argparse
 import re
 import shutil
 
 REPO = Path(__file__).resolve().parents[1]
+
+
+def configure_view(repo=REPO, segment="straight"):
+    """Una sola colocación centrada; solo macros y datos de la copia visual."""
+    if segment not in ("straight", "turn", "turntwist"):
+        raise ValueError("Segmento desconocido")
+    target = repo / "build/visualization-source"
+    if not (target / "CMakeLists.txt").is_file():
+        raise ValueError("Primero preparar la copia visual")
+    lines = []
+    placements = 0
+    for line in (repo / "vendor/moleculardna/human_cell.mac").read_text(encoding="utf-8").splitlines():
+        command = line.split("#", 1)[0].strip()
+        fields = command.split()
+        key = fields[0] if fields else ""
+        if key == "/run/beamOn" or key.startswith("/vis/") or key == "/dnageom/drawCellVolumes":
+            continue
+        if key == "/control/execute":
+            raise ValueError("La plantilla contiene otra macro")
+        if key == "/dnageom/placementVolume":
+            if len(fields) < 3 or fields[1] != segment:
+                continue
+            placements += 1
+        if key == "/dnageom/definitionFile":
+            line = "/dnageom/definitionFile single_segment.txt"
+        elif key == "/world/worldSize":
+            line = "/world/worldSize 1 um"
+        elif key == "/cell/radiusSize":
+            line = "/cell/radiusSize 150 150 150 nm"
+        elif key == "/chromosome/add":
+            line = "/chromosome/add cell ellipse 100 100 100 0 0 0 nm 0 0 0"
+        elif key == "/run/initialize":
+            lines.append("/dnageom/drawCellVolumes false")
+        lines.append(line)
+    if placements != 1:
+        raise ValueError("No se encontró una definición única del segmento")
+    macro = "\n".join(lines) + "\n"
+    definition = "# IDX KIND POS_X POS_Y POS_Z EUL_PSI EUL_THETA EUL_PHI\n"
+    definition += f"0 {segment} 0 0 0 0 0 0\n"
+    view = (repo / "visualization/human_cell_view.mac").read_text(encoding="utf-8")
+    startup = "/control/execute human_cell_geometry.mac\n/control/execute human_cell_view.mac\n"
+    for folder in (target, repo / "build/visualization"):
+        if folder.is_dir():
+            for name, text in (("human_cell_geometry.mac", macro), ("single_segment.txt", definition),
+                               ("human_cell_view.mac", view), ("vis.mac", startup)):
+                (folder / name).write_text(text, encoding="utf-8")
+    print(f"Vista de un solo segmento {segment}, centrado en el origen; sin eventos")
 
 
 def prepare(repo=REPO):
@@ -55,11 +103,21 @@ def prepare(repo=REPO):
     (target / "vis.mac").write_text(
         "/control/execute human_cell_geometry.mac\n/control/execute human_cell_view.mac\n",
         encoding="utf-8")
+    configure_view(repo)
     print("Copia visual preparada en build/visualization-source")
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--refresh", action="store_true", help="Actualizar macros de una copia visual existente, sin recompilar")
+    parser.add_argument("--segment", choices=("straight", "turn", "turntwist"), default="straight")
+    args = parser.parse_args()
     try:
-        prepare()
+        if args.refresh:
+            configure_view(segment=args.segment)
+        else:
+            prepare()
+            if args.segment != "straight":
+                configure_view(segment=args.segment)
     except (OSError, ValueError) as error:
         raise SystemExit(f"ERROR: {error}")

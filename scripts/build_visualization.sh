@@ -16,6 +16,7 @@ cd "$build"
 cmake -S "$src" -B "$build" -DWITH_GEANT4_UIVIS=ON -DCMAKE_BUILD_TYPE=Release \
   -DCMAKE_C_COMPILER="$CC" -DCMAKE_CXX_COMPILER="$CXX"
 cmake --build "$build" --parallel "${SLURM_CPUS_PER_TASK:-1}"
+cp "$src/single_segment.txt" "$build/single_segment.txt"
 echo 'Visualización compilada. Desde el escritorio YUCA:'
 echo "cd '$build'"
 echo './molecular -t 1 -p 2'

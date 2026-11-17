@@ -1,4 +1,4 @@
-# Vista inicial: geometría sin eventos. Basada en Geant4 v11.3.0 vis.mac.
+# Vista de un solo segmento centrado. Sin eventos.
 # DNAWorld es el mundo paralelo registrado en la copia de visualización.
 /vis/open OGL
 /vis/viewer/set/autoRefresh false
@@ -6,6 +6,6 @@
 /vis/drawVolume DNAWorld
 /vis/viewer/set/viewpointThetaPhi 90 180
 /vis/viewer/set/style surface
-/vis/viewer/zoomTo 1
+/vis/viewer/zoomTo 3
 /vis/viewer/set/autoRefresh true
 /vis/viewer/flush

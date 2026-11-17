@@ -8,7 +8,7 @@ title: Visualizar human_cell en YUCA
 [Volver al inicio](index.md)
 
 **Objetivo:** abrir la geometría del modelo de fibroblasto y explorar sus
-segmentos de cromatina en el escritorio remoto de YUCA. No se simulan eventos.
+un solo segmento de cromatina en el escritorio remoto de YUCA. No se simulan eventos.
 
 ## 1. Abrir el escritorio YUCA
 
@@ -22,6 +22,20 @@ git pull --ff-only
 source env/setup.sh
 ~~~
 
+## Si ya compilaste la versión visual anterior
+
+Cierra la ejecución anterior con Ctrl+C en su terminal. Desde la raíz:
+
+~~~bash
+git pull --ff-only
+source env/setup.sh
+python3 scripts/prepare_visualization.py --refresh
+cd build/visualization
+./molecular -t 1 -p 2
+~~~
+
+**No necesitas recompilar:** solo cambia la macro y el archivo de colocaciones.
+
 ## 2. Preparar una copia para visualización — una sola vez
 
 ~~~bash
@@ -29,7 +43,7 @@ python3 scripts/prepare_visualization.py
 ~~~
 
 **Debe ocurrir:** aparece Copia visual preparada en build/visualization-source.
-Si ya existe, continúa con la compilación; no necesitas repetir la preparación.
+Si ya existe, actualiza las macros con python3 scripts/prepare_visualization.py --refresh y continúa.
 
 El script activa estas flags **solo en la copia**:
 
@@ -63,7 +77,7 @@ cd ~/G4-molecularDNA/build/visualization
 ~~~
 
 **Debe ocurrir:** se abre el visor OpenGL y aparece la consola de Geant4.
-La carga y el dibujo de toda la geometría pueden tardar. No escribas beamOn
+Se carga únicamente un segmento centrado, no el archivo completo de colocaciones del núcleo. No escribas beamOn
 para esta práctica de geometría.
 
 Estos comandos se escriben **en la consola de Geant4**, no en Bash.
@@ -76,17 +90,16 @@ Estos comandos se escriben **en la consola de Geant4**, no en Bash.
 /vis/viewer/set/viewpointThetaPhi 90 180
 ~~~
 
-**Qué esperar:** una vista del conjunto. A esta escala no distinguirás bases individuales.
+**Qué esperar:** un solo segmento de cromatina, con sus moléculas e histonas. No es el núcleo completo.
 
-### Acercarse a una región
+### Acercarse al segmento
 
 ~~~text
-/vis/viewer/zoomTo 150
-/vis/viewer/panTo -720 -320 nm
+/vis/viewer/zoomTo 5
+/vis/viewer/panTo 0 0 nm
 ~~~
 
-Es el encuadre usado como referencia en la macro visual del ejemplo 11.3;
-si tu vista queda vacía, vuelve al conjunto y desplázate gradualmente.
+El segmento está centrado en el origen. Si tu vista queda vacía, vuelve a zoomTo 1 y panTo 0 0 nm.
 Para ajustar el encuadre:
 
 ~~~text
@@ -107,7 +120,24 @@ pan desplaza respecto a la posición actual; panTo establece el desplazamiento.
 /vis/viewer/flush
 ~~~
 
+## Elegir un segmento recto, curvo o retorcido
+
+Cierra el visor. Desde la raíz del repositorio, elige una opción:
+
+~~~bash
+python3 scripts/prepare_visualization.py --refresh --segment straight
+~~~
+
+Usa turn para un segmento curvo o turntwist para uno curvo y retorcido.
+Vuelve a abrir el mismo ejecutable; no requiere recompilar.
+
 ## 5. Qué estás observando
+
+La vista reducida reutiliza las moléculas del segmento del modelo human_cell.
+Se crea single_segment.txt con una sola colocación y se carga solo su tipo
+molecular. El archivo cube-centred-X-8.txt permanece intacto. El contenedor
+se reduce para encuadrar el segmento: esta vista no reproduce la geometría
+completa usada para calcular daño ni su normalización.
 
 human_cell representa un modelo geométrico de ADN organizado en cromatina
 dentro de una región nuclear. Los segmentos rectos, curvos y retorcidos se
