@@ -1,0 +1,15 @@
+# Ejecutar con la geometría y el visor ya abiertos. No lanza eventos.
+# Profundidad 0: ocultar solo contenedores, conservando sus moléculas hijas.
+/vis/viewer/set/autoRefresh false
+/vis/geometry/set/visibility world 0 false
+/vis/geometry/set/visibility CellLogical 0 false
+/vis/geometry/set/visibility DNAPhysLV 0 false
+/vis/geometry/set/visibility straight 0 false
+/vis/viewer/set/background white
+/vis/viewer/set/style surface
+/vis/viewer/set/viewpointThetaPhi 90 180
+/vis/viewer/panTo 0 0 nm
+/vis/viewer/zoomTo 3
+/vis/viewer/set/autoRefresh true
+/vis/viewer/rebuild
+/vis/viewer/flush

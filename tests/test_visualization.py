@@ -26,6 +26,8 @@ class VisualizationTests(unittest.TestCase):
         (root / "build/molecular/geometries/cube-centred-X-8.txt").write_text("geometry")
         (root / "visualization").mkdir()
         (root / "visualization/human_cell_view.mac").write_text("/vis/drawVolume DNAWorld\n")
+        (root / "visualization/show_dna.mac").write_text(
+            (ROOT / "visualization/show_dna.mac").read_text(encoding="utf-8"), encoding="utf-8")
         return source
 
     def test_visual_copy_preserves_production_and_removes_events(self):
@@ -45,6 +47,10 @@ class VisualizationTests(unittest.TestCase):
             self.assertEqual((target / "human_cell_geometry.mac").read_text().count("/dnageom/placementVolume"), 1)
             module.configure_view(root, "turn")
             self.assertIn("0 turn 0 0 0 0 0 0", (target / "single_segment.txt").read_text())
+            show = (target / "show_dna.mac").read_text()
+            self.assertIn("/vis/geometry/set/visibility turn 0 false", show)
+            self.assertNotIn("/vis/geometry/set/visibility straight", show)
+            self.assertNotIn("/run/beamOn", show)
             with self.assertRaises(ValueError):
                 module.prepare(root)
 

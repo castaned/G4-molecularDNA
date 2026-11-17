@@ -4,8 +4,4 @@
 /vis/viewer/set/autoRefresh false
 /vis/verbose warnings
 /vis/drawVolume DNAWorld
-/vis/viewer/set/viewpointThetaPhi 90 180
-/vis/viewer/set/style surface
-/vis/viewer/zoomTo 3
-/vis/viewer/set/autoRefresh true
-/vis/viewer/flush
+/control/execute show_dna.mac

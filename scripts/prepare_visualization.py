@@ -46,11 +46,14 @@ def configure_view(repo=REPO, segment="straight"):
     definition = "# IDX KIND POS_X POS_Y POS_Z EUL_PSI EUL_THETA EUL_PHI\n"
     definition += f"0 {segment} 0 0 0 0 0 0\n"
     view = (repo / "visualization/human_cell_view.mac").read_text(encoding="utf-8")
+    show = (repo / "visualization/show_dna.mac").read_text(encoding="utf-8")
+    show = show.replace("/vis/geometry/set/visibility straight 0 false",
+                        f"/vis/geometry/set/visibility {segment} 0 false")
     startup = "/control/execute human_cell_geometry.mac\n/control/execute human_cell_view.mac\n"
     for folder in (target, repo / "build/visualization"):
         if folder.is_dir():
             for name, text in (("human_cell_geometry.mac", macro), ("single_segment.txt", definition),
-                               ("human_cell_view.mac", view), ("vis.mac", startup)):
+                               ("human_cell_view.mac", view), ("show_dna.mac", show), ("vis.mac", startup)):
                 (folder / name).write_text(text, encoding="utf-8")
     print(f"Vista de un solo segmento {segment}, centrado en el origen; sin eventos")
 

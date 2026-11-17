@@ -82,6 +82,34 @@ para esta práctica de geometría.
 
 Estos comandos se escriben **en la consola de Geant4**, no en Bash.
 
+### Mostrar el ADN con una sola macro
+
+La vista inicial ya ejecuta **show_dna.mac** automáticamente. Oculta las cajas
+contenedoras, conserva las moléculas y usa fondo blanco. Para recuperar esa
+vista en cualquier momento, escribe en **Session** de Geant4:
+
+~~~text
+/control/execute show_dna.mac
+~~~
+
+No se recompila ni se generan eventos. La preparación adapta la macro al tipo
+de segmento elegido (straight, turn o turntwist).
+
+Si vienes de una versión anterior, cierra el visor y actualiza desde Bash:
+
+~~~bash
+cd ~/G4-molecularDNA
+git pull --ff-only
+source env/setup.sh
+python3 scripts/prepare_visualization.py --refresh
+cd build/visualization
+./molecular -t 1 -p 2
+~~~
+
+Si solo ves una caja gris, ejecuta show_dna.mac antes de aumentar el zoom.
+El aviso «Too many touchables ... scene tree ... empty» se refiere al árbol de
+navegación del visor y, por sí solo, no demuestra que falte la geometría.
+
 ### Ver el conjunto y cambiar el ángulo
 
 ~~~text
