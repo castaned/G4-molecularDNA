@@ -85,8 +85,8 @@ Estos comandos se escriben **en la consola de Geant4**, no en Bash.
 ### Mostrar el ADN con una sola macro
 
 La vista inicial ya ejecuta **show_dna.mac** automáticamente. Oculta los contenedores exteriores, muestra el segmento en alambre y conserva
-las moléculas sobre fondo negro. El encuadre usa ángulos 60 y 120 grados,
-desplazamiento cero y zoom absoluto 10. Para recuperar esa
+las moléculas sobre fondo negro. El encuadre usa ángulos 70 y 120 grados,
+desplazamiento cero y zoom absoluto 18 y eje X hacia arriba para una orientación más vertical. Para recuperar esa
 vista en cualquier momento, escribe en **Session** de Geant4:
 
 ~~~text
@@ -207,5 +207,5 @@ Se conserva la licencia Geant4 en las fuentes copiadas.
 
 </details>
 
-Si el segmento ocupa demasiado espacio, ajusta el zoom absoluto a 8; si queda
-pequeño, prueba 12. El tamaño aparente también depende de la ventana del visor.
+Si el segmento ocupa demasiado espacio, ajusta el zoom absoluto a 14; si queda
+pequeño, prueba 22. El tamaño aparente también depende de la ventana del visor.
