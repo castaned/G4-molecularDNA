@@ -84,3 +84,8 @@ Sigue la [receta de protones](docs/protons.md): primero un evento a 10 MeV con
 config/protons-smoke.json; después cien con config/protons.json. El proyecto
 Slurm se define en resources.account (ejemplo p067). Estas configuraciones
 aún requieren validación de tiempo, memoria y resultados en YUCA.
+
+## Visualización de human_cell
+
+[Receta de visualización en YUCA](docs/visualization.md): copia independiente,
+flags del mundo paralelo, compilación con UI/Vis y macro sin eventos.

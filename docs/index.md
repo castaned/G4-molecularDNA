@@ -97,6 +97,12 @@ Si aparece FAILED o TIMEOUT, no continúes: abre la
 
 <a id="alfas"></a>
 <a id="combinar"></a>
+## Visualizar la geometría
+
+Para abrir human_cell en el escritorio YUCA, sigue el apartado
+[Visualizar el fibroblasto y su ADN](visualization.md).
+Incluye las flags, la compilación gráfica y una macro sin eventos.
+
 ## Generar resultados
 
 **Antes de preparar una campaña:** abre su archivo en `config/` y comprueba
