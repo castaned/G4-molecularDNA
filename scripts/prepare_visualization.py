@@ -47,8 +47,8 @@ def configure_view(repo=REPO, segment="straight"):
     definition += f"0 {segment} 0 0 0 0 0 0\n"
     view = (repo / "visualization/human_cell_view.mac").read_text(encoding="utf-8")
     show = (repo / "visualization/show_dna.mac").read_text(encoding="utf-8")
-    show = show.replace("/vis/geometry/set/visibility straight 0 false",
-                        f"/vis/geometry/set/visibility {segment} 0 false")
+    show = show.replace("/vis/geometry/set/visibility straight 0 true",
+                        f"/vis/geometry/set/visibility {segment} 0 true")
     startup = "/control/execute human_cell_geometry.mac\n/control/execute human_cell_view.mac\n"
     for folder in (target, repo / "build/visualization"):
         if folder.is_dir():

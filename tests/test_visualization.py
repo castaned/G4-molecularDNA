@@ -48,7 +48,7 @@ class VisualizationTests(unittest.TestCase):
             module.configure_view(root, "turn")
             self.assertIn("0 turn 0 0 0 0 0 0", (target / "single_segment.txt").read_text())
             show = (target / "show_dna.mac").read_text()
-            self.assertIn("/vis/geometry/set/visibility turn 0 false", show)
+            self.assertIn("/vis/geometry/set/visibility turn 0 true", show)
             self.assertNotIn("/vis/geometry/set/visibility straight", show)
             self.assertNotIn("/run/beamOn", show)
             with self.assertRaises(ValueError):
