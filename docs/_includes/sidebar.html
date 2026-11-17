@@ -1,0 +1,23 @@
+<aside class="docs-sidebar">
+  <nav aria-label="Índice de la práctica">
+    <p class="sidebar-title">Índice de la práctica</p>
+    <a class="sidebar-home" href="{{ '/' | relative_url }}"{% if page.url == '/' or page.url == '/index.html' %} aria-current="page"{% endif %}>Inicio</a>
+    <h2>Recorrido de simulación</h2>
+    <ol>
+      <li><a href="{{ '/index.html' | relative_url }}#preparacion-inicial">Preparación inicial <small>Una sola vez</small></a></li>
+      <li><a href="{{ '/electrons.html' | relative_url }}"{% if page.url == '/electrons.html' %} aria-current="page"{% endif %}>Electrones</a></li>
+      <li><a href="{{ '/protons.html' | relative_url }}"{% if page.url == '/protons.html' %} aria-current="page"{% endif %}>Protones</a></li>
+      <li><a href="{{ '/alphas.html' | relative_url }}"{% if page.url == '/alphas.html' %} aria-current="page"{% endif %}>Alfas</a></li>
+    </ol>
+    <h2>Actividad adicional</h2>
+    <ul>
+      <li><a href="{{ '/visualization.html' | relative_url }}"{% if page.url == '/visualization.html' %} aria-current="page"{% endif %}>Visualizar human_cell <small>Explorar la geometría sin eventos</small></a></li>
+    </ul>
+    <h2>Consulta</h2>
+    <ul>
+      <li><a href="{{ '/troubleshooting.html' | relative_url }}"{% if page.url == '/troubleshooting.html' %} aria-current="page"{% endif %}>Errores y soluciones</a></li>
+      <li><a href="{{ '/validation.html' | relative_url }}"{% if page.url == '/validation.html' %} aria-current="page"{% endif %}>Resultados de referencia</a></li>
+      <li><a href="{{ '/advanced.html' | relative_url }}"{% if page.url == '/advanced.html' %} aria-current="page"{% endif %}>Explicación técnica</a></li>
+    </ul>
+  </nav>
+</aside>

@@ -14,15 +14,11 @@ title: molecularDNA en YUCA
 {% for asset in site.static_files %}{% if asset.path == '/assets/images/dna-simulation.jpg' %}<a class="dna-image-link" href="{{ '/assets/images/dna-simulation.jpg' | relative_url }}" aria-label="Ampliar visualización del ADN"><img class="dna-simulation" src="{{ '/assets/images/dna-simulation.jpg' | relative_url }}" alt="Visualización molecular del ADN con trayectorias de partículas en Geant4" width="210" height="184"></a>{% endif %}{% endfor %}
 </div>
 
-<div class="recipe-grid">
-<a class="recipe-card" href="#preparacion-inicial"><div class="recipe-step">01 · PREPARAR</div><strong>Preparación inicial</strong><span>Obtén los archivos y compila el ejemplo una sola vez.</span></a>
-<a class="recipe-card" href="{{ '/electrons.html' | relative_url }}"><div class="recipe-step">02 · ELECTRONES</div><strong>Tu primera campaña</strong><span>Genera 1,000 eventos, combina las salidas y obtén las gráficas.</span></a>
-<a class="recipe-card" href="{{ '/alphas.html' | relative_url }}"><div class="recipe-step">03 · ALFAS</div><strong>Explora varias energías</strong><span>Simula 1, 5 y 10 MeV y revisa los resultados por energía.</span></a>
-<a class="recipe-card" href="{{ '/protons.html' | relative_url }}"><div class="recipe-step">04 · PROTONES</div><strong>Simular protones</strong><span>Prueba un evento y genera una campaña de cien protones a 10 MeV.</span></a>
-</div>
-
 Esta guía utiliza el clúster **YUCA** para simular el daño en el ADN con
 molecularDNA. Ejecuta los comandos en una terminal de YUCA.
+
+Sigue el recorrido del índice lateral: preparación, electrones, protones y alfas.
+La visualización es una actividad adicional; no es necesaria para ejecutar las simulaciones.
 
 Copia cada bloque y comprueba el resultado antes de continuar.
 
