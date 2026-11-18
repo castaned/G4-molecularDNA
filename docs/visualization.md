@@ -7,7 +7,7 @@ title: Visualizar human_cell en YUCA
 
 [Volver al inicio](index.md)
 
-**Objetivo:** abrir la geometría del modelo de fibroblasto y explorar sus
+**Objetivo:** abrir la geometría del modelo de fibroblasto y explorar
 un solo segmento de cromatina en el escritorio remoto de YUCA. No se simulan eventos.
 
 ## 1. Abrir el escritorio YUCA
@@ -85,9 +85,9 @@ Estos comandos se escriben **en la consola de Geant4**, no en Bash.
 ### Mostrar el ADN con una sola macro
 
 La vista inicial ya ejecuta **show_dna.mac** automáticamente. Oculta los contenedores exteriores, muestra el segmento en alambre y conserva
-las moléculas sobre fondo negro. El encuadre usa ángulos 70 y 45 grados,
-desplazamiento cero y zoom absoluto 18 y eje Z hacia arriba para una orientación más vertical. Para recuperar esa
-vista en cualquier momento, escribe en **Session** de Geant4:
+las moléculas sobre fondo negro. La vista comprobada en YUCA muestra el segmento
+casi vertical, con ángulos de 70° y 45°, el eje Z hacia arriba y zoom 18.
+Para recuperar ese encuadre, escribe este comando en **Session** de Geant4.
 
 ~~~text
 /control/execute show_dna.mac
@@ -196,8 +196,8 @@ usando el ejecutable normal. No uses el ejecutable visual para producir sus camp
 <summary>Archivos y referencia de los cambios</summary>
 
 La preparación está diseñada para las fuentes de Geant4 11.3.0 y se detiene
-si no encuentra las flags esperadas. La receta y el soporte gráfico todavía
-deben comprobarse en una sesión gráfica de YUCA.
+si no encuentra las flags esperadas. La vista del segmento recto se comprobó
+en el visor OpenGL del escritorio de YUCA.
 
 Referencias del código original:
 [DetectorConstruction.cc](https://github.com/Geant4/geant4/blob/v11.3.0/examples/advanced/dna/moleculardna/src/DetectorConstruction.cc),
