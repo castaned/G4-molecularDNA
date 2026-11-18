@@ -89,7 +89,7 @@ class CampaignTests(unittest.TestCase):
                 with patch.object(subprocess, "check_output", return_value="98765\n") as sbatch:
                     c.submit(destination, False)
                     args = sbatch.call_args.args[0]
-                    self.assertIn("--array=0-11%1", args)
+                    self.assertIn("--array=0-11", args)
                     self.assertIn("--cpus-per-task=1", args)
                     self.assertIn("--mem=10G", args)
                     self.assertEqual(args[-1], sys.executable)

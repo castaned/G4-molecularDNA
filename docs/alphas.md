@@ -31,16 +31,14 @@ from pathlib import Path
 cfg = json.loads(Path("config/alphas.json").read_text())
 cfg.update(name="alphas-small", particles=["alpha"], energies=[1, 5, 10],
            unit="MeV", events_per_job=2, replicas=10, seed_base=80001)
-cfg["resources"].update(cpus=1, time="12:00:00",
-                        max_concurrent=1, account="p067")
+cfg["resources"].update(cpus=1, time="12:00:00", account="p067")
 Path("config/alphas-small.local.json").write_text(json.dumps(cfg, indent=2) + "\n")
 PY
 ~~~
 
 **Debe ocurrir:** vuelve a aparecer el cursor sin errores.
 Esto prepara 30 trabajos: diez por energía, con dos eventos cada uno.
-Cada energía tendrá veinte eventos. Se ejecuta **un trabajo a la vez**, con
-**hasta doce horas por trabajo** y 10 GB de memoria.
+Cada energía tendrá veinte eventos. Cada trabajo solicita **hasta doce horas por trabajo** y 10 GB de memoria.
 
 ## 2. Preparar y enviar
 
@@ -49,7 +47,7 @@ python3 scripts/campaign.py prepare config/alphas-small.local.json runs/alphas-s
 python3 scripts/campaign.py submit runs/alphas-small-001 --dry-run
 ~~~
 
-**Comprueba:** aparecen --array=0-29%1, --mem=10G y --account=p067.
+**Comprueba:** aparecen --array=0-29, --mem=10G y --account=p067.
 
 ~~~bash
 python3 scripts/campaign.py submit runs/alphas-small-001
@@ -70,8 +68,8 @@ sacct -j NUMERO --format=JobID%25,State%18,ExitCode,Elapsed,MaxRSS
 
 | Qué ves | Qué hacer |
 | --- | --- |
-| Un trabajo RUNNING y los demás PENDING | Es lo esperado: se permite uno a la vez |
-| JobArrayTaskLimit | Esperar; no es un error |
+| Algunas tareas RUNNING y otras PENDING | Slurm espera recursos o aplica límites del proyecto |
+| JobArrayTaskLimit | Revisa si el array se envió con un límite explícito de concurrencia |
 | COMPLETED y 0:0 | Esa tarea terminó correctamente |
 | OUT_OF_MEMORY | Le faltó memoria; no combinar su ROOT |
 | TIMEOUT | Agotó el tiempo; no combinar su ROOT |

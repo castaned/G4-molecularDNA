@@ -52,14 +52,14 @@ runs/smoke-001/task_00000/plots/.
 ## 1. Generar 1,000 eventos
 
 La configuración incluida ya está preparada: diez trabajos de cien electrones,
-todos a 0.662 MeV. Solo se ejecutan dos trabajos simultáneamente.
+todos a 0.662 MeV. Slurm puede ejecutar los trabajos en paralelo según los recursos disponibles.
 
 ~~~bash
 python3 scripts/campaign.py prepare config/electrons.json runs/electrons-001 &&
 python3 scripts/campaign.py submit runs/electrons-001 --dry-run
 ~~~
 
-**Comprueba:** aparecen --array=0-9%2, --mem=10G y --account=p067.
+**Comprueba:** aparecen --array=0-9, --mem=10G y --account=p067.
 
 Ahora envía:
 
@@ -87,7 +87,7 @@ Si algunos están pendientes, espera: no tienes que enviarlos de nuevo.
 | --- | --- |
 | RUNNING | Está trabajando |
 | PENDING | Espera su turno |
-| JobArrayTaskLimit | Ya están trabajando los dos permitidos |
+| JobArrayTaskLimit | Revisa si el array se envió con un límite explícito de concurrencia |
 | COMPLETED y 0:0 | Terminó sin error de Slurm |
 | FAILED o TIMEOUT | Revisar el error antes de continuar |
 

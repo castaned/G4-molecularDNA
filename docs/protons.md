@@ -40,7 +40,7 @@ python3 scripts/campaign.py prepare config/protons-smoke.json runs/protons-smoke
 python3 scripts/campaign.py submit runs/protons-smoke-001 --dry-run
 ~~~
 
-**Comprueba:** aparecen `--array=0-0%1`, `--mem=10G`, `--time=02:00:00` y
+**Comprueba:** aparecen `--array=0-0`, `--mem=10G`, `--time=02:00:00` y
 `--account=p067` (o tu proyecto). Después envía una sola vez:
 
 ~~~bash
@@ -78,7 +78,7 @@ ejemplo: no la desactives ni reduzcas su tiempo para obtener resultados finales.
 ## 3. Generar cien protones
 
 El archivo config/protons.json prepara **diez trabajos de diez eventos**, todos
-a **10 MeV**, con semillas distintas. Se ejecuta un trabajo a la vez.
+a **10 MeV**, con semillas distintas. Slurm puede ejecutar las tareas en paralelo.
 Usa la duración y memoria de la prueba para decidir si conviene ajustar
 events_per_job o resources.time antes de preparar la campaña.
 No supongas que el tiempo crece exactamente en proporción al número de eventos.
@@ -88,7 +88,7 @@ python3 scripts/campaign.py prepare config/protons.json runs/protons-001 &&
 python3 scripts/campaign.py submit runs/protons-001 --dry-run
 ~~~
 
-**Comprueba:** `--array=0-9%1`, `--mem=10G`, `--time=12:00:00` y tu proyecto.
+**Comprueba:** `--array=0-9`, `--mem=10G`, `--time=12:00:00` y tu proyecto.
 
 ~~~bash
 python3 scripts/campaign.py submit runs/protons-001
@@ -106,7 +106,7 @@ sacct -X -j NUMERO --format=JobID%25,State%18,ExitCode,Elapsed
 | Qué aparece | Qué hacer |
 | --- | --- |
 | RUNNING | Está en ejecución |
-| PENDING con JobArrayTaskLimit | Esperar: se permite un trabajo simultáneo |
+| PENDING con JobArrayTaskLimit | Revisa si el array se envió con un límite explícito de concurrencia |
 | COMPLETED y 0:0 | Esa tarea terminó sin error de Slurm |
 | TIMEOUT, FAILED u OUT_OF_MEMORY | Revisar; no combinar esa tarea |
 

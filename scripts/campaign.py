@@ -57,7 +57,8 @@ def validate(cfg):
         raise ValueError("Semillas fuera del intervalo elegido")
     r = cfg["resources"]
     positive_int(r["cpus"], "cpus")
-    positive_int(r["max_concurrent"], "max_concurrent")
+    if "max_concurrent" in r:
+        positive_int(r["max_concurrent"], "max_concurrent")
     if "memory" in r and not re.fullmatch(r"[1-9][0-9]*[KMGTP]?", r["memory"]):
         raise ValueError("memory: por ejemplo 8G")
     if not re.fullmatch(r"(?:[0-9]+-)?[0-9]{1,3}:[0-5][0-9]:[0-5][0-9]", r["time"]):
@@ -143,8 +144,11 @@ def submit(destination, dry_run):
     manifest = json.loads((destination / "manifest.json").read_text(encoding="utf-8"))
     validate(manifest["config"])
     r = manifest["config"]["resources"]
+    array = f"0-{len(manifest['tasks']) - 1}"
+    if "max_concurrent" in r:
+        array += f"%{r['max_concurrent']}"
     command = ["sbatch", "--parsable", "--nodes=1", "--ntasks=1", f"--cpus-per-task={r['cpus']}",
-        f"--time={r['time']}", f"--array=0-{len(manifest['tasks'])-1}%{r['max_concurrent']}",
+        f"--time={r['time']}", f"--array={array}",
         f"--job-name=g4dna-{manifest['config']['name']}", f"--chdir={REPO}",
         f"--output={destination}/logs/%A_%a.out", f"--error={destination}/logs/%A_%a.err"]
     for key in ("partition", "account"):

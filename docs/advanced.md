@@ -160,7 +160,7 @@ python3 scripts/campaign.py prepare config/smoke.json runs/smoke-001
 python3 scripts/campaign.py submit runs/smoke-001 --dry-run
 ```
 
-**Comprobación:** el comando debe incluir `--account=p067`, `--array=0-0%1`,
+**Comprobación:** el comando debe incluir `--account=p067`, `--array=0-0`,
 `--cpus-per-task=1`, `--mem=10G` y `--time=00:30:00`. También pasa la ruta absoluta
 de Python, que debe estar disponible en los nodos de cómputo.
 
@@ -271,7 +271,7 @@ nano config/electrons.json
 | `resources.cpus` | 1 | Un hilo por tarea |
 | `resources.memory` | `10G` | Memoria solicitada por trabajo. Si omites el campo, Slurm aplica su valor predeterminado. |
 | `resources.time` | `04:00:00` | Límite, no tiempo estimado |
-| `resources.max_concurrent` | 2 | Hasta dos tareas simultáneas |
+| `resources.max_concurrent` | Omitido | Slurm decide cuántas tareas ejecutar según los recursos y las políticas del clúster. |
 | `resources.account` | `p067` | Cuenta de proyecto |
 
 Total: partículas × energías × réplicas × eventos por tarea =
@@ -286,7 +286,7 @@ python3 scripts/campaign.py prepare config/electrons.json runs/electrons-001 &&
 python3 scripts/campaign.py submit runs/electrons-001 --dry-run
 ```
 
-**Comprobación:** `--array=0-9%2` y `--account=p067`. Después:
+**Comprobación:** `--array=0-9` y `--account=p067`. Después:
 
 ```bash
 python3 scripts/campaign.py submit runs/electrons-001
@@ -303,7 +303,7 @@ squeue -r -j ID_ARRAY
 sacct -j ID_ARRAY --format=JobID,State,ExitCode,Elapsed
 ```
 
-`JobArrayTaskLimit` es normal con `%2`: mantiene hasta dos tareas ejecutándose.
+Slurm inicia las tareas según los recursos disponibles y los límites del proyecto.
 
 {% assign array_image = site.static_files | where: "path", "/assets/images/slurm-array-status.png" | first %}
 {% if array_image %}
@@ -432,8 +432,7 @@ from pathlib import Path
 cfg = json.loads(Path("config/alphas.json").read_text())
 cfg.update(name="alphas-small", particles=["alpha"], energies=[1, 5, 10],
            unit="MeV", events_per_job=2, replicas=10, seed_base=80001)
-cfg["resources"].update(cpus=1, time="12:00:00",
-                        max_concurrent=2, account="p067")
+cfg["resources"].update(cpus=1, time="12:00:00", account="p067")
 Path("config/alphas-small.local.json").write_text(json.dumps(cfg, indent=2) + "\n")
 PY
 ~~~
@@ -442,7 +441,7 @@ El archivo local queda separado del preset original. No modifica campañas ya
 preparadas. Dos eventos por tarea reducen el trabajo de transporte/química de cada
 job, pero cada uno repite la inicialización de la geometría.
 
-Se solicita **1 CPU por tarea**, hasta **2 tareas simultáneas** y **12 horas por
+Se solicita **1 CPU por tarea** y **12 horas por
 tarea**. Confirmar que la partición admite ese límite; no es una garantía de
 finalización. La concurrencia es distinta del número de réplicas.
 
@@ -458,7 +457,7 @@ python3 scripts/campaign.py prepare config/alphas-small.local.json runs/alphas-s
 python3 scripts/campaign.py submit runs/alphas-small-001 --dry-run
 ~~~
 
-**Comprobación:** el comando debe incluir --array=0-29%2, --account=p067,
+**Comprobación:** el comando debe incluir --array=0-29, --account=p067,
 --cpus-per-task=1 y --time=12:00:00. Después enviar una sola vez:
 
 ~~~bash
@@ -504,8 +503,7 @@ squeue -r -j ID_ALPHA
 sacct -j ID_ALPHA --format=JobID,Account,State,ExitCode,Elapsed
 ~~~
 
-Las tareas principales deben estar COMPLETED / 0:0. JobArrayTaskLimit es normal
-para tareas pendientes cuando ya hay dos ejecutándose. Comprobar también el cierre:
+Las tareas principales deben estar COMPLETED / 0:0. Comprobar también el cierre:
 
 ~~~bash
 python3 - <<'PY'
