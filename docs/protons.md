@@ -40,7 +40,7 @@ python3 scripts/campaign.py prepare config/protons-smoke.json runs/protons-smoke
 python3 scripts/campaign.py submit runs/protons-smoke-001 --dry-run
 ~~~
 
-**Comprueba:** aparecen `--array=0-0%1`, `--mem=16G`, `--time=02:00:00` y
+**Comprueba:** aparecen `--array=0-0%1`, `--time=02:00:00` y
 `--account=p067` (o tu proyecto). Después envía una sola vez:
 
 ~~~bash
@@ -80,7 +80,7 @@ ejemplo: no la desactives ni reduzcas su tiempo para obtener resultados finales.
 El archivo config/protons.json prepara **diez trabajos de diez eventos**, todos
 a **10 MeV**, con semillas distintas. Se ejecuta un trabajo a la vez.
 Usa la duración y memoria de la prueba para decidir si conviene ajustar
-events_per_job, resources.time o resources.memory antes de preparar la campaña.
+events_per_job o resources.time antes de preparar la campaña.
 No supongas que el tiempo crece exactamente en proporción al número de eventos.
 
 ~~~bash
@@ -88,7 +88,7 @@ python3 scripts/campaign.py prepare config/protons.json runs/protons-001 &&
 python3 scripts/campaign.py submit runs/protons-001 --dry-run
 ~~~
 
-**Comprueba:** `--array=0-9%1`, `--mem=16G`, `--time=12:00:00` y tu proyecto.
+**Comprueba:** `--array=0-9%1`, `--time=12:00:00` y tu proyecto.
 
 ~~~bash
 python3 scripts/campaign.py submit runs/protons-001
@@ -164,7 +164,7 @@ Edita config/protons.json antes de preparar una carpeta nueva:
 | Trabajos por energía | replicas |
 | Semillas | seed_base; usa un intervalo nuevo para una campaña independiente |
 | Proyecto Slurm | resources.account |
-| Tiempo y memoria | resources.time y resources.memory |
+| Tiempo | resources.time |
 
 El total es energías × réplicas × eventos por trabajo. Ajusta el número esperado
 en inspect_output.C y los nombres de los archivos si cambias ese total.

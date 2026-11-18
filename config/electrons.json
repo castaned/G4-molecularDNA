@@ -13,7 +13,6 @@
   "physics_option": 2,
   "resources": {
     "cpus": 1,
-    "memory": "8G",
     "time": "04:00:00",
     "max_concurrent": 2,
     "partition": "",

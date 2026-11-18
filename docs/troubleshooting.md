@@ -79,8 +79,8 @@ mantiene como máximo dos tareas del array en ejecución.
 **Síntoma:** `SLURM_MEM_PER_CPU, SLURM_MEM_PER_GPU, and SLURM_MEM_PER_NODE are mutually exclusive`.
 
 Puede ocurrir al enviar desde Open OnDemand, que exporta variables de su propia
-asignación. El runner actual limpia `SLURM_MEM_PER_CPU` y `SLURM_MEM_PER_GPU`
-solo para `srun`, y conserva la memoria por nodo solicitada con `--mem`.
+asignación. El script limpia las tres variables antes de ejecutar `srun`. Slurm aplica
+al paso la memoria asignada al trabajo.
 Actualizar el repositorio y preparar otra campaña; no cambiar la geometría.
 
 ## Python no encontrado por srun

@@ -161,7 +161,7 @@ python3 scripts/campaign.py submit runs/smoke-001 --dry-run
 ```
 
 **Comprobación:** el comando debe incluir `--account=p067`, `--array=0-0%1`,
-`--cpus-per-task=1`, `--mem=8G` y `--time=00:30:00`. También pasa la ruta absoluta
+`--cpus-per-task=1` y `--time=00:30:00`. También pasa la ruta absoluta
 de Python, que debe estar disponible en los nodos de cómputo.
 
 Enviar una sola vez:
@@ -269,7 +269,7 @@ nano config/electrons.json
 | `replicas` | 10 | Diez ejecuciones |
 | `seed_base` | 60001 | Semillas distintas |
 | `resources.cpus` | 1 | Un hilo por tarea |
-| `resources.memory` | `8G` | Memoria por tarea/nodo único |
+| `resources.memory` | Omitido | Usa la memoria predeterminada de Slurm. Indica un valor solo si necesitas solicitar memoria explícitamente. |
 | `resources.time` | `04:00:00` | Límite, no tiempo estimado |
 | `resources.max_concurrent` | 2 | Hasta dos tareas simultáneas |
 | `resources.account` | `p067` | Cuenta de proyecto |
@@ -432,7 +432,7 @@ from pathlib import Path
 cfg = json.loads(Path("config/alphas.json").read_text())
 cfg.update(name="alphas-small", particles=["alpha"], energies=[1, 5, 10],
            unit="MeV", events_per_job=2, replicas=10, seed_base=80001)
-cfg["resources"].update(cpus=1, memory="8G", time="12:00:00",
+cfg["resources"].update(cpus=1, time="12:00:00",
                         max_concurrent=2, account="p067")
 Path("config/alphas-small.local.json").write_text(json.dumps(cfg, indent=2) + "\n")
 PY

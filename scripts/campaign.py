@@ -58,7 +58,7 @@ def validate(cfg):
     r = cfg["resources"]
     positive_int(r["cpus"], "cpus")
     positive_int(r["max_concurrent"], "max_concurrent")
-    if not re.fullmatch(r"[1-9][0-9]*[KMGTP]?", r["memory"]):
+    if "memory" in r and not re.fullmatch(r"[1-9][0-9]*[KMGTP]?", r["memory"]):
         raise ValueError("memory: por ejemplo 8G")
     if not re.fullmatch(r"(?:[0-9]+-)?[0-9]{1,3}:[0-5][0-9]:[0-5][0-9]", r["time"]):
         raise ValueError("time: [dias-]horas:minutos:segundos")
@@ -144,12 +144,14 @@ def submit(destination, dry_run):
     validate(manifest["config"])
     r = manifest["config"]["resources"]
     command = ["sbatch", "--parsable", "--nodes=1", "--ntasks=1", f"--cpus-per-task={r['cpus']}",
-        f"--mem={r['memory']}", f"--time={r['time']}", f"--array=0-{len(manifest['tasks'])-1}%{r['max_concurrent']}",
+        f"--time={r['time']}", f"--array=0-{len(manifest['tasks'])-1}%{r['max_concurrent']}",
         f"--job-name=g4dna-{manifest['config']['name']}", f"--chdir={REPO}",
         f"--output={destination}/logs/%A_%a.out", f"--error={destination}/logs/%A_%a.err"]
     for key in ("partition", "account"):
         if r.get(key):
             command.append(f"--{key}={r[key]}")
+    if "memory" in r:
+        command.append(f"--mem={r['memory']}")
     command += [str(REPO / "slurm/run_human_cell_array.slurm"), str(REPO), str(destination), sys.executable]
     print(shlex.join(command))
     if not dry_run:

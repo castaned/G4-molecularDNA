@@ -31,7 +31,7 @@ from pathlib import Path
 cfg = json.loads(Path("config/alphas.json").read_text())
 cfg.update(name="alphas-small", particles=["alpha"], energies=[1, 5, 10],
            unit="MeV", events_per_job=2, replicas=10, seed_base=80001)
-cfg["resources"].update(cpus=1, memory="32G", time="12:00:00",
+cfg["resources"].update(cpus=1, time="12:00:00",
                         max_concurrent=1, account="p067")
 Path("config/alphas-small.local.json").write_text(json.dumps(cfg, indent=2) + "\n")
 PY
@@ -40,8 +40,7 @@ PY
 **Debe ocurrir:** vuelve a aparecer el cursor sin errores.
 Esto prepara 30 trabajos: diez por energía, con dos eventos cada uno.
 Cada energía tendrá veinte eventos. Se ejecuta **un trabajo a la vez**, con
-**32 GB y hasta doce horas por trabajo**. Se usan 32 GB como prueba porque una
-alfa agotó los 8 GB; todavía hay que comprobar si ese límite es suficiente.
+**hasta doce horas por trabajo** y la memoria predeterminada de Slurm.
 
 ## 2. Preparar y enviar
 
@@ -50,7 +49,7 @@ python3 scripts/campaign.py prepare config/alphas-small.local.json runs/alphas-s
 python3 scripts/campaign.py submit runs/alphas-small-001 --dry-run
 ~~~
 
-**Comprueba:** aparecen --array=0-29%1, --mem=32G y --account=p067.
+**Comprueba:** aparecen --array=0-29%1 y --account=p067.
 
 ~~~bash
 python3 scripts/campaign.py submit runs/alphas-small-001
