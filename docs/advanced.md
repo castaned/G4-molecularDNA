@@ -161,7 +161,7 @@ python3 scripts/campaign.py submit runs/smoke-001 --dry-run
 ```
 
 **Comprobación:** el comando debe incluir `--account=p067`, `--array=0-0%1`,
-`--cpus-per-task=1` y `--time=00:30:00`. También pasa la ruta absoluta
+`--cpus-per-task=1`, `--mem=10G` y `--time=00:30:00`. También pasa la ruta absoluta
 de Python, que debe estar disponible en los nodos de cómputo.
 
 Enviar una sola vez:
@@ -269,7 +269,7 @@ nano config/electrons.json
 | `replicas` | 10 | Diez ejecuciones |
 | `seed_base` | 60001 | Semillas distintas |
 | `resources.cpus` | 1 | Un hilo por tarea |
-| `resources.memory` | Omitido | Usa la memoria predeterminada de Slurm. Indica un valor solo si necesitas solicitar memoria explícitamente. |
+| `resources.memory` | `10G` | Memoria solicitada por trabajo. Si omites el campo, Slurm aplica su valor predeterminado. |
 | `resources.time` | `04:00:00` | Límite, no tiempo estimado |
 | `resources.max_concurrent` | 2 | Hasta dos tareas simultáneas |
 | `resources.account` | `p067` | Cuenta de proyecto |

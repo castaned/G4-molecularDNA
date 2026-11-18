@@ -91,7 +91,7 @@ class CampaignTests(unittest.TestCase):
                     args = sbatch.call_args.args[0]
                     self.assertIn("--array=0-11%1", args)
                     self.assertIn("--cpus-per-task=1", args)
-                    self.assertFalse(any(arg.startswith("--mem=") for arg in args))
+                    self.assertIn("--mem=10G", args)
                     self.assertEqual(args[-1], sys.executable)
                     self.assertTrue((destination / "submission.json").exists())
                     with self.assertRaises(ValueError):

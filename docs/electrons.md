@@ -59,7 +59,7 @@ python3 scripts/campaign.py prepare config/electrons.json runs/electrons-001 &&
 python3 scripts/campaign.py submit runs/electrons-001 --dry-run
 ~~~
 
-**Comprueba:** aparecen --array=0-9%2 y --account=p067.
+**Comprueba:** aparecen --array=0-9%2, --mem=10G y --account=p067.
 
 Ahora envía:
 

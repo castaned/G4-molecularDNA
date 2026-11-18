@@ -40,7 +40,7 @@ PY
 **Debe ocurrir:** vuelve a aparecer el cursor sin errores.
 Esto prepara 30 trabajos: diez por energía, con dos eventos cada uno.
 Cada energía tendrá veinte eventos. Se ejecuta **un trabajo a la vez**, con
-**hasta doce horas por trabajo** y la memoria predeterminada de Slurm.
+**hasta doce horas por trabajo** y 10 GB de memoria.
 
 ## 2. Preparar y enviar
 
@@ -49,7 +49,7 @@ python3 scripts/campaign.py prepare config/alphas-small.local.json runs/alphas-s
 python3 scripts/campaign.py submit runs/alphas-small-001 --dry-run
 ~~~
 
-**Comprueba:** aparecen --array=0-29%1 y --account=p067.
+**Comprueba:** aparecen --array=0-29%1, --mem=10G y --account=p067.
 
 ~~~bash
 python3 scripts/campaign.py submit runs/alphas-small-001

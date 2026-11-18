@@ -40,7 +40,7 @@ python3 scripts/campaign.py prepare config/protons-smoke.json runs/protons-smoke
 python3 scripts/campaign.py submit runs/protons-smoke-001 --dry-run
 ~~~
 
-**Comprueba:** aparecen `--array=0-0%1`, `--time=02:00:00` y
+**Comprueba:** aparecen `--array=0-0%1`, `--mem=10G`, `--time=02:00:00` y
 `--account=p067` (o tu proyecto). Después envía una sola vez:
 
 ~~~bash
@@ -88,7 +88,7 @@ python3 scripts/campaign.py prepare config/protons.json runs/protons-001 &&
 python3 scripts/campaign.py submit runs/protons-001 --dry-run
 ~~~
 
-**Comprueba:** `--array=0-9%1`, `--time=12:00:00` y tu proyecto.
+**Comprueba:** `--array=0-9%1`, `--mem=10G`, `--time=12:00:00` y tu proyecto.
 
 ~~~bash
 python3 scripts/campaign.py submit runs/protons-001
