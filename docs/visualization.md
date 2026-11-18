@@ -93,6 +93,10 @@ Para recuperar ese encuadre, escribe este comando en **Session** de Geant4.
 /control/execute show_dna.mac
 ~~~
 
+![Segmento de cromatina casi vertical dentro de su contenedor en el visor OpenGL de YUCA](assets/images/human-cell-visualization.webp)
+
+*Vista de referencia en YUCA tras ejecutar `show_dna.mac` para el segmento recto de `human_cell`.*
+
 No se recompila ni se generan eventos. La preparación adapta la macro al tipo
 de segmento elegido (straight, turn o turntwist).
 
