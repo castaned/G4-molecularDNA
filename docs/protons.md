@@ -147,7 +147,9 @@ G4-molecularDNA/runs/protons-001/plots_combined/
 
 Encontrarás human_cell_proton.png y human_cell_proton.pdf, con los cuatro paneles
 de especies, clasificación del daño, roturas simples y roturas dobles.
-Todavía no hay una figura de referencia de protones validada en este repositorio.
+![Gráfica de referencia de protones con paneles de especies, clasificación del daño y rendimientos de roturas simples y dobles](assets/images/protons-reference.png)
+
+*Resultado del array de protones ejecutado en YUCA y graficado con `human_cell_proton.C`.*
 No esperes los mismos valores que para electrones o alfas. Compara las unidades
 y los rendimientos por dosis; un número igual de partículas no implica igual dosis.
 Las macros muestran valores centrales, sin incertidumbres estimadas.
