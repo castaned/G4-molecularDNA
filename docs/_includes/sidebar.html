@@ -6,7 +6,12 @@
     <ol>
       <li><a href="{{ '/index.html' | relative_url }}#preparacion-inicial">Preparación inicial <small>Una sola vez</small></a></li>
       <li><a href="{{ '/electrons.html' | relative_url }}"{% if page.url == '/electrons.html' %} aria-current="page"{% endif %}>Electrones</a></li>
-      <li><a href="{{ '/protons.html' | relative_url }}"{% if page.url == '/protons.html' %} aria-current="page"{% endif %}>Protones</a></li>
+      <li>
+        <a href="{{ '/protons.html' | relative_url }}"{% if page.url == '/protons.html' %} aria-current="page"{% endif %}>Protones</a>
+        <ul>
+          <li><a style="padding-left: 1.5rem" href="{{ '/proton-let-workflow.html' | relative_url }}"{% if page.url == '/proton-let-workflow.html' %} aria-current="page"{% endif %}>Daño frente al LET</a></li>
+        </ul>
+      </li>
       <li><a href="{{ '/alphas.html' | relative_url }}"{% if page.url == '/alphas.html' %} aria-current="page"{% endif %}>Alfas</a></li>
     </ol>
     <h2>Actividad adicional</h2>
