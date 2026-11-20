@@ -9,7 +9,7 @@ title: Receta para protones
 
 **Objetivo:** simular protones de **10 MeV** en la misma geometría human_cell.
 Primero ejecuta un evento; después, si termina correctamente, prepara cien.
-Esta receta todavía no se ha validado mediante una corrida de protones en YUCA.
+La campaña de 100 protones a 10 MeV se ejecutó y graficó en YUCA.
 Los límites de tiempo y memoria son valores de prueba, no garantías de finalización.
 
 ## 1. Abrir el entorno
@@ -175,3 +175,7 @@ Para varias energías, prepara una campaña por energía y usa carpetas diferent
 Cambiar un JSON no modifica campañas ya preparadas o enviadas.
 
 </details>
+
+## Daño frente al LET
+
+Para barrer varias energías y generar el CSV y las curvas con PyROOT, sigue la [guía de protones frente al LET](proton-let-workflow.md).

@@ -17,6 +17,8 @@
 #include <TAxis.h>
 #include <algorithm>
 #include <cmath>
+#include <fstream>
+#include <iomanip>
 #include <cstdint>
 #include <iostream>
 #include <string>
@@ -41,7 +43,7 @@ using namespace std;
 // ifile, r3, Nbp (as shown in terminal) //
 //***************************************//
 
-void human_cell_proton(const char* input = "molecular-dna.root", const char* output = "plots", double dnaMbp = 6405.886128) {
+void human_cell_proton(const char* input = "molecular-dna.root", const char* output = "plots", double dnaMbp = 6405.886128, const char* csv = "") {
 //**********//
 // If you need to add multiple root outputs, by multithreading, use this command:
 
@@ -367,6 +369,16 @@ DSBh_yield = (Double_t) norm * total_DSBh / dose / Nbp;
 
 float total_SSB_totalYield = SSB_yield + SSBp_yield + SSB2p_yield;
 float total_DSB_totalYield = DSB_yield + DSBp_yield + DSBpp_yield;
+
+if (*csv) {
+  std::ofstream table(csv);
+  table << "primaries,dose_gy,dna_gbp,ssb_count,dsb_count\n"
+        << std::setprecision(17) << number << ',' << dose << ',' << Nbp / 1000.
+        << ',' << (static_cast<long long>(total_SSB) + total_SSBp + total_SSB2p)
+        << ',' << (static_cast<long long>(total_DSB) + total_DSBp + total_DSBpp) << '\n';
+  table.close();
+  if (!table) { cerr << "Cannot write CSV: " << csv << endl; return; }
+}
 
 cout<<"\n"                      <<ifile         <<'\n'
     <<"\nDose Absorbed (Gy): "  <<dose          <<'\n'
