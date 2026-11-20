@@ -14,7 +14,18 @@ Referencia: Shin et al., Cancers 2021, 13, 4940, figuras 3 y 4 y tabla 3
 
 Usa una campaña independiente por energía. La receta sirve para comprobar el
 análisis con 100 primarios por punto; amplía la estadística según la precisión de DSB.
-Desde la raíz del repositorio actualizado:
+**Actualiza el repositorio antes de copiar el bloque del barrido.** En YUCA, ejecuta:
+
+```bash
+cd ~/G4-molecularDNA && git pull --ff-only
+```
+
+Continúa cuando el comando termine correctamente. Si ves
+`ERROR: 'max_concurrent'`, tu copia de `scripts/campaign.py` es anterior al cambio
+que hizo opcional ese campo. Actualiza el repositorio y vuelve a ejecutar el bloque
+completo desde `BASE=...` para preparar el barrido en una carpeta nueva.
+
+Ahora prepara el barrido:
 
 ```bash
 source env/setup.sh
