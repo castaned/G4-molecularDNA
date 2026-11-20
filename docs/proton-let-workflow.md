@@ -53,9 +53,24 @@ done
 ```
 
 Comprueba que aparezcan `--account=p067`, `--mem=10G` y `--array=0-9`.
-Tras revisar el tiempo y los recursos, envía cada campaña con
-`python3 scripts/campaign.py submit "$BASE/proton-10mev"`, cambiando la
-energía en el nombre. Guarda los identificadores que devuelve Slurm.
+El bloque anterior usa `--dry-run` y solo muestra los comandos. Para enviar
+los cinco arrays, ejecuta este bloque en la misma terminal:
+
+~~~bash
+if [[ -n "${BASE:-}" ]] && ls "$BASE"/proton-{1,2,5,10,20}mev/manifest.json >/dev/null; then
+  for E in 1 2 5 10 20; do
+    python3 scripts/campaign.py submit "$BASE/proton-${E}mev" || break
+  done
+else
+  echo "Define BASE con la ruta del barrido que contiene los cinco manifiestos."
+fi
+~~~
+
+Si abriste otra terminal, vuelve a `~/G4-molecularDNA`, carga
+`source env/setup.sh` y usa `ls -dt runs/proton-let-*/` para encontrar la
+ruta real que debes asignar a `BASE`. Cada envío correcto imprime
+`Enviada campaña:` y el ID del array. Guarda los cinco IDs y consulta la
+cola con `squeue -r -u "$USER"`.
 
 ## 2. Validar y analizar cada energía
 
