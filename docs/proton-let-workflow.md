@@ -128,9 +128,16 @@ el LET se toman de este índice, así que verifica que correspondan al ROOT.
 
 ```bash
 source env/setup.sh
-python3 -c 'import ROOT; print(ROOT.gROOT.GetVersion())'
-python3 scripts/plot_proton_let.py proton_let_inputs.csv results/proton-let
+ROOT_LIB="$(root-config --libdir)"
+PYTHONPATH="$ROOT_LIB${PYTHONPATH:+:$PYTHONPATH}" /usr/bin/python3 -c \
+  'import ROOT; ROOT.gROOT.SetBatch(True); print("PyROOT listo:", ROOT.gROOT.GetVersion(), ROOT.TGraph().GetN() == 0)' &&
+PYTHONPATH="$ROOT_LIB${PYTHONPATH:+:$PYTHONPATH}" /usr/bin/python3 \
+  scripts/plot_proton_let.py proton_let_inputs.csv results/proton-let
 ```
+
+En YUCA se comprobó `PyROOT listo: 6.24/08 True` con `/usr/bin/python3`
+(Python 3.9). El `python3` de Spack (3.11) no es compatible con esta
+instalación de PyROOT.
 
 La macro existente extrae de cada ROOT el número de primarios, la dosis y
 los conteos clasificados. El script consolida los puntos en `proton_let.csv`
